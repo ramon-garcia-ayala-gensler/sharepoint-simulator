@@ -1,0 +1,12 @@
+{
+  "imagenes": [
+    {
+      "archivo": "atlas-comunidad-s0-c0-w0-graph.png",
+      "ruta": "s0.c0.w0",
+      "ancho_px": 2408,
+      "alt": "Grafo de comunidades. 24 personas ficticias y 5 comunidades; resalta vecinos y se navega con teclado.",
+      "vinculo": null,
+      "nota": "póster / fallback estático del Embed"
+    }
+  ]
+}

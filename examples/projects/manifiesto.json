@@ -1,0 +1,32 @@
+{
+  "imagenes": [
+    {
+      "archivo": "atlas-proyectos-s0-c0-w0-banner.png",
+      "ruta": "s0.c0.w0",
+      "ancho_px": 2560,
+      "alt": "Atlas Design Hub. Proyectos. Casos reales de cada squad, con lo que se aprendió.",
+      "vinculo": null
+    },
+    {
+      "archivo": "atlas-proyectos-s2-c0-w0-caso-torre.png",
+      "ruta": "s2.c0.w0",
+      "ancho_px": 760,
+      "alt": "Torre Mirador. Model Lab, oficinas. Un modelo federado que cuatro equipos revisan a la vez.",
+      "vinculo": "https://example.com/casos/torre-mirador"
+    },
+    {
+      "archivo": "atlas-proyectos-s2-c1-w0-caso-parque.png",
+      "ruta": "s2.c1.w0",
+      "ancho_px": 760,
+      "alt": "Parque Lineal Cumbre. Site Scan, espacio público. Una nube de puntos para decidir el trazado.",
+      "vinculo": "https://example.com/casos/parque-cumbre"
+    },
+    {
+      "archivo": "atlas-proyectos-s2-c2-w0-caso-aurora.png",
+      "ruta": "s2.c2.w0",
+      "ancho_px": 760,
+      "alt": "Centro Aurora. Form Finder, retail. Cuarenta opciones de planta comparadas en un día.",
+      "vinculo": "https://example.com/casos/centro-aurora"
+    }
+  ]
+}

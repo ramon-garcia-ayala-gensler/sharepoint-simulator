@@ -1,0 +1,104 @@
+{
+  "pagina": "comunidad",
+  "titulo": "Comunidad",
+  "estado": "borrador (no publicar)",
+  "estilo": "dark",
+  "tipo_sitio": "Communication Site (full-width solo aquí; en Team Site todo va a 1 columna)",
+  "banner": "borrar (Delete web part); título solo en Page details",
+  "navegacion": "no editar sin orden explícita",
+  "secciones": [
+    {
+      "layout": "1",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "Embed",
+            "ruta": "s0.c0.w0",
+            "tipo": "Embed",
+            "nota": "Grafo con hover, foco y selección. SharePoint no puede hacerlo nativo.",
+            "config": {
+              "url_embed": "https://ramon-garcia-ayala-gensler.github.io/sharepoint-simulator/simulator/index.html?embed=graph",
+              "alto_px": {
+                "760": 585,
+                "1204": 845
+              },
+              "gif_fallback": null,
+              "poster": "atlas-comunidad-s0-c0-w0-graph.png",
+              "alt": "Grafo de comunidades. 24 personas ficticias y 5 comunidades; resalta vecinos y se navega con teclado."
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "3",
+      "fondo": "neutral",
+      "columnas": [
+        [
+          {
+            "webpart": "Quick links",
+            "ruta": "s1.c0.w0",
+            "tipo": "Nativo",
+            "config": {
+              "layout": "List",
+              "titulo_web_part": "Guilds",
+              "elementos": 3
+            }
+          }
+        ],
+        [
+          {
+            "webpart": "Text",
+            "ruta": "s1.c1.w0",
+            "tipo": "Nativo",
+            "config": {
+              "estilos": "H3 + Normal"
+            }
+          }
+        ],
+        [
+          {
+            "webpart": "Quick links",
+            "ruta": "s1.c2.w0",
+            "tipo": "Nativo",
+            "config": {
+              "layout": "List",
+              "titulo_web_part": "Recursos",
+              "elementos": 3
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "2",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "Text",
+            "ruta": "s2.c0.w0",
+            "tipo": "Nativo",
+            "config": {
+              "estilos": "H2 + Normal"
+            }
+          }
+        ],
+        [
+          {
+            "webpart": "Power Apps",
+            "ruta": "s2.c1.w0",
+            "tipo": "Power Apps",
+            "nota": "Formulario con validación que escribe en una List.",
+            "config": {
+              "app": "(pegar el ID o enlace de la app)",
+              "lista": "Ideas",
+              "alto_px": 520
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

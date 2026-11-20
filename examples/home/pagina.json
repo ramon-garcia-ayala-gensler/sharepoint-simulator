@@ -1,0 +1,186 @@
+{
+  "pagina": "inicio",
+  "titulo": "Inicio",
+  "estado": "borrador (no publicar)",
+  "estilo": "dark",
+  "tipo_sitio": "Communication Site (full-width solo aquí; en Team Site todo va a 1 columna)",
+  "banner": "borrar (Delete web part); título solo en Page details",
+  "navegacion": "no editar sin orden explícita",
+  "secciones": [
+    {
+      "layout": "1",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "Embed",
+            "ruta": "s0.c0.w0",
+            "tipo": "Embed",
+            "nota": "Header animado de la portada. Alternativa sin Embed: el GIF del mismo bucle en un web part Image.",
+            "config": {
+              "url_embed": "https://ramon-garcia-ayala-gensler.github.io/sharepoint-simulator/simulator/index.html?embed=header",
+              "alto_px": {
+                "760": 300,
+                "1204": 380
+              },
+              "gif_fallback": "atlas-inicio-s0-c0-w0-header.gif",
+              "poster": "atlas-inicio-s0-c0-w0-header.png",
+              "alt": "Header animado. Campo halftone que respira, 6 oficinas y paquetes de datos. Bucle de 12 s."
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "2/3-1/3",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "Text",
+            "ruta": "s1.c0.w0",
+            "tipo": "Nativo",
+            "config": {
+              "estilos": "H2 + Normal + Quote",
+              "color_texto": "themePrimary"
+            }
+          }
+        ],
+        [
+          {
+            "webpart": "Quick links",
+            "ruta": "s1.c1.w0",
+            "tipo": "Nativo",
+            "config": {
+              "layout": "List",
+              "elementos": 4
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "1",
+      "fondo": "neutral",
+      "columnas": [
+        [
+          {
+            "webpart": "Embed",
+            "ruta": "s2.c0.w0",
+            "tipo": "Embed",
+            "nota": "Figura completa con su propio título. Fondo de sección Neutral para separar bloques.",
+            "config": {
+              "url_embed": "https://ramon-garcia-ayala-gensler.github.io/sharepoint-simulator/simulator/index.html?embed=stages",
+              "alto_px": {
+                "760": 480,
+                "1204": 490
+              },
+              "gif_fallback": null,
+              "poster": "atlas-inicio-s2-c0-w0-stages.png",
+              "alt": "Dónde entra cada squad. Matriz de 4 squads por 8 etapas del proyecto, con resaltado al pasar."
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "2/3-1/3",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "Highlighted content",
+            "ruta": "s3.c0.w0",
+            "tipo": "Nativo",
+            "config": {
+              "origen": "Páginas de este sitio",
+              "filtro": "Content type = Project",
+              "layout": "Carousel",
+              "elementos": 5,
+              "orden": "Más recientes"
+            }
+          }
+        ],
+        [
+          {
+            "webpart": "Events",
+            "ruta": "s3.c1.w0",
+            "tipo": "Nativo",
+            "config": {
+              "lista": "Events",
+              "layout": "Compact",
+              "elementos": 3
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "1",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "Embed",
+            "ruta": "s4.c0.w0",
+            "tipo": "Embed",
+            "nota": "Cifras y mapa con estado interno: por eso no es una imagen.",
+            "config": {
+              "url_embed": "https://ramon-garcia-ayala-gensler.github.io/sharepoint-simulator/simulator/index.html?embed=impact",
+              "alto_px": {
+                "760": 910,
+                "1204": 700
+              },
+              "gif_fallback": null,
+              "poster": "atlas-inicio-s4-c0-w0-impact.png",
+              "alt": "Impacto por squad. Pestañas por squad, cifras clicables y burbujas proporcionales al área."
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "1",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "People",
+            "ruta": "s5.c0.w0",
+            "tipo": "Nativo",
+            "config": {
+              "personas": "8 personas (ficticias en esta maqueta)",
+              "layout": "Compact"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "1",
+      "fondo": "strong",
+      "columnas": [
+        [
+          {
+            "webpart": "Text",
+            "ruta": "s6.c0.w0",
+            "tipo": "Nativo",
+            "config": {
+              "estilos": "H2 + Normal",
+              "fondo_seccion": "Strong (themePrimary)"
+            }
+          },
+          {
+            "webpart": "Quick links",
+            "ruta": "s6.c0.w1",
+            "tipo": "Nativo",
+            "config": {
+              "layout": "Button",
+              "elementos": 3
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

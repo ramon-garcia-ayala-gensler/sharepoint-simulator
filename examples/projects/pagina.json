@@ -1,0 +1,95 @@
+{
+  "pagina": "proyectos",
+  "titulo": "Proyectos",
+  "estado": "borrador (no publicar)",
+  "estilo": "dark",
+  "tipo_sitio": "Communication Site (full-width solo aquí; en Team Site todo va a 1 columna)",
+  "banner": "borrar (Delete web part); título solo en Page details",
+  "navegacion": "no editar sin orden explícita",
+  "secciones": [
+    {
+      "layout": "fullwidth",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "Image",
+            "ruta": "s0.c0.w0",
+            "tipo": "Imagen",
+            "nota": "Título de marca como imagen con alt completo. Sección de ancho completo (solo Communication Site).",
+            "config": {
+              "archivo": "atlas-proyectos-s0-c0-w0-banner.png",
+              "ancho_px": 2560,
+              "alt": "Atlas Design Hub. Proyectos. Casos reales de cada squad, con lo que se aprendió.",
+              "vinculo": null
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "1",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "Power Apps",
+            "ruta": "s1.c0.w0",
+            "tipo": "Power Apps",
+            "nota": "Interacción con datos: filtros sobre una List. Solo aquí tiene sentido Power Apps.",
+            "config": {
+              "app": "(pegar el ID o enlace de la app)",
+              "lista": "Projects",
+              "alto_px": 520
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "layout": "3",
+      "fondo": "none",
+      "columnas": [
+        [
+          {
+            "webpart": "Image",
+            "ruta": "s2.c0.w0",
+            "tipo": "Imagen",
+            "config": {
+              "archivo": "atlas-proyectos-s2-c0-w0-caso-torre.png",
+              "ancho_px": 760,
+              "alt": "Torre Mirador. Model Lab, oficinas. Un modelo federado que cuatro equipos revisan a la vez.",
+              "vinculo": "https://example.com/casos/torre-mirador"
+            }
+          }
+        ],
+        [
+          {
+            "webpart": "Image",
+            "ruta": "s2.c1.w0",
+            "tipo": "Imagen",
+            "config": {
+              "archivo": "atlas-proyectos-s2-c1-w0-caso-parque.png",
+              "ancho_px": 760,
+              "alt": "Parque Lineal Cumbre. Site Scan, espacio público. Una nube de puntos para decidir el trazado.",
+              "vinculo": "https://example.com/casos/parque-cumbre"
+            }
+          }
+        ],
+        [
+          {
+            "webpart": "Image",
+            "ruta": "s2.c2.w0",
+            "tipo": "Imagen",
+            "config": {
+              "archivo": "atlas-proyectos-s2-c2-w0-caso-aurora.png",
+              "ancho_px": 760,
+              "alt": "Centro Aurora. Form Finder, retail. Cuarenta opciones de planta comparadas en un día.",
+              "vinculo": "https://example.com/casos/centro-aurora"
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

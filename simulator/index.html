@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="es" data-s="dark" data-a="lime" data-wp="0" data-f="brand">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SharePoint Simulator</title>
+<meta name="description" content="Maqueta educativa de un sitio de SharePoint moderno: web parts, piezas Embed y recetas de armado. Contenido 100 % ficticio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   SharePoint Simulator · maqueta genérica con contenido ficticio.
+   Un solo archivo: CSS + JS inline. Para encontrar lo editable:
+       grep -n "@personalizar" simulator/index.html
+   ===================================================================== */
+
+/* 1 · TOKENS ---------------------------------------------------------
+   @personalizar: tokens (primitivos → semánticos). Cambia colores aquí. */
+:root{
+  --f-brand:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-sp:"Segoe UI","Segoe UI Web (West European)",-apple-system,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --font:var(--f-brand);
+  --on-accent:#0B0C0D;
+  --r:6px;
+  --gap:32px;
+}
+html[data-f="sp"]{--font:var(--f-sp)}
+/* Estilo A · «Terreno oscuro» */
+html[data-s="dark"]{
+  --bg:#0B0C0D;--surf:#14161A;--surf2:#1B1E23;--line:#2A2E35;--ink:#E9EAEC;--mute:#A0A5AD;
+  --bg-neutral:#111316;
+  --hl-model:#7C9DFF;--hl-scan:#3DD6A8;--hl-form:#FF9A6B;--hl-insight:#E8C650;--on-hl:#0B0C0D;
+  color-scheme:dark;
+}
+/* Estilo B · «Papel editorial» */
+html[data-s="light"]{
+  --bg:#F4F3EF;--surf:#FFFFFF;--surf2:#ECEAE4;--line:#D9D6CD;--ink:#1B1C1E;--mute:#5A5E64;
+  --bg-neutral:#EAE8E1;
+  --hl-model:#2F55D4;--hl-scan:#0F7F61;--hl-form:#B8431A;--hl-insight:#7C5F00;--on-hl:#FFFFFF;
+  color-scheme:light;
+}
+/* Acentos (--accent = relleno; --atx = acento usado como TEXTO, con contraste AA sobre el fondo) */
+html[data-a="cobalt"]{--accent:#4C7DFF}
+html[data-a="lime"]{--accent:#B7E34A}
+html[data-a="coral"]{--accent:#FF6B4A}
+html[data-a="amber"]{--accent:#F2B43C}
+html[data-s="dark"][data-a="cobalt"]{--atx:#8FADFF}
+html[data-s="dark"][data-a="lime"]{--atx:#B7E34A}
+html[data-s="dark"][data-a="coral"]{--atx:#FF8E74}
+html[data-s="dark"][data-a="amber"]{--atx:#F2B43C}
+html[data-s="light"][data-a="cobalt"]{--atx:#2547B5}
+html[data-s="light"][data-a="lime"]{--atx:#46620B}
+html[data-s="light"][data-a="coral"]{--atx:#B03618}
+html[data-s="light"][data-a="amber"]{--atx:#7F5400}
+html{--bg-soft:color-mix(in srgb,var(--accent) 11%,var(--bg))}
+html[data-s="light"]{--bg-soft:color-mix(in srgb,var(--accent) 22%,var(--bg))}
+
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--atx)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--atx);outline-offset:2px;border-radius:3px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mono{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* 2 · CHROME DE SHAREPOINT ------------------------------------------ */
+.m365{height:48px;background:#1D1D20;color:#fff;display:flex;align-items:center;gap:14px;padding:0 16px;font-family:var(--f-sp);font-size:14px}
+.m365 .waffle{width:32px;height:32px;display:grid;place-items:center;border-radius:4px;background:none;border:0;cursor:default}
+.m365 .waffle svg{width:18px;height:18px;fill:#fff}
+.m365 .app{font-weight:600}
+.m365 .search{flex:1;max-width:520px;margin:0 auto;background:#fff1;border:1px solid #fff3;border-radius:4px;height:32px;padding:0 12px;color:#fffb;display:flex;align-items:center;gap:8px;font-size:13px}
+.m365 .av{width:30px;height:30px;border-radius:50%;background:#5B6B8C;display:grid;place-items:center;font-size:12px;font-weight:600}
+.sh{background:var(--surf);border-bottom:1px solid var(--line)}
+.sh-in{max-width:1204px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:24px;min-height:64px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+.brand svg{width:34px;height:34px}
+.brand b{font-weight:500;font-size:17px;letter-spacing:-.01em}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{color:var(--mute);text-decoration:none;padding:8px 12px;border-radius:4px;font-size:14.5px}
+.nav a:hover{color:var(--ink);background:var(--surf2)}
+.nav a[aria-current="page"]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--accent)}
+.nav .tool{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase}
+.nav .sp{flex:1}
+.page{padding:0 16px}
+.stage{container:stage/inline-size;margin:0 auto;max-width:1204px;width:100%;padding:8px 0 96px}
+.stage[data-w="760"]{max-width:760px;outline:1px dashed var(--line);outline-offset:8px}
+.stage[data-w="390"]{max-width:390px;outline:1px dashed var(--line);outline-offset:8px}
+.foot{border-top:1px solid var(--line);background:var(--surf)}
+.foot-in{max-width:1204px;margin:0 auto;padding:28px 16px 120px;display:flex;gap:24px;justify-content:space-between;flex-wrap:wrap;color:var(--mute);font-size:14px}
+.foot a{color:var(--mute)}
+
+/* 3 · LIENZO: SECCIONES Y COLUMNAS ----------------------------------
+   @personalizar: layouts. Reflujo como SharePoint: 3 cols ≥1024, 2 cols 640 a 1023, 1 col <640. */
+.sec{position:relative;display:grid;grid-template-columns:1fr;gap:var(--gap);padding:20px 0}
+.sec[data-bg="neutral"]{background:var(--bg-neutral);padding:24px}
+.sec[data-bg="soft"]{background:var(--bg-soft);padding:24px}
+.sec[data-bg="strong"]{background:var(--accent);color:var(--on-accent);padding:32px 24px;--atx:var(--on-accent);--ink:var(--on-accent);--mute:#0B0C0DCC;--line:#0B0C0D40}
+.sec[data-l="full"]{padding-left:0;padding-right:0}
+.col{min-width:0;display:flex;flex-direction:column;gap:20px}
+@container stage (min-width:640px){
+  .sec[data-l="2"],.sec[data-l="3"]{grid-template-columns:1fr 1fr}
+  .sec[data-l="13"]{grid-template-columns:1fr 2fr}
+  .sec[data-l="31"]{grid-template-columns:2fr 1fr}
+}
+@container stage (min-width:1024px){
+  .sec[data-l="3"]{grid-template-columns:repeat(3,1fr)}
+}
+
+/* 4 · WEB PARTS NATIVOS --------------------------------------------- */
+.t h2{font-size:30px;line-height:1.15;font-weight:300;letter-spacing:-.025em;margin:0 0 10px}
+.t h3{font-size:19px;line-height:1.25;font-weight:500;margin:0 0 6px}
+.t p{margin:0 0 10px;color:var(--mute);max-width:62ch}
+.t p strong{color:var(--ink);font-weight:500}
+.t blockquote{margin:12px 0;padding:2px 0 2px 16px;border-left:3px solid var(--accent);font-size:19px;font-weight:300;line-height:1.4}
+.wh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 12px}
+.wh h2,.wh h3{margin:0;font-size:19px;font-weight:500;letter-spacing:-.01em}
+.wh .car{display:flex;gap:6px}
+.btn,.carbtn{background:var(--surf2);border:1px solid var(--line);color:var(--ink);border-radius:4px;padding:6px 12px;cursor:pointer;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.btn:hover,.carbtn:hover{border-color:var(--atx)}
+.carbtn{width:32px;height:32px;padding:0;justify-content:center}
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 10px;scrollbar-width:thin}
+.card{flex:0 0 260px;scroll-snap-align:start;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;border-top:2px solid var(--c,var(--accent))}
+.card:hover{border-color:var(--c,var(--accent))}
+.card .art{aspect-ratio:16/10;background:var(--surf2);color:var(--c,var(--accent))}
+.card .art svg{display:block;width:100%;height:100%}
+.card .cb{padding:12px 14px 14px}
+.card .ct{font-weight:500;font-size:15.5px;line-height:1.3;margin:2px 0 6px}
+.card .cm{color:var(--mute);font-size:13px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.chip::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c,var(--accent))}
+.ev{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.ev:last-child{border-bottom:0}
+.ev .d{flex:0 0 52px;text-align:center;border:1px solid var(--line);border-radius:4px;padding:4px 0;background:var(--surf);line-height:1.1}
+.ev .d b{display:block;font-size:20px;font-weight:500}
+.ev .d span{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
+.ev .et{font-weight:500;font-size:15px}
+.ev .em{color:var(--mute);font-size:13px}
+.ql{display:flex;flex-direction:column}
+.ql a{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:15px}
+.ql a:hover{color:var(--atx)}
+.ql a i{flex:0 0 28px;height:28px;border-radius:4px;background:var(--surf2);border:1px solid var(--line);display:grid;place-items:center;font-style:normal;font-family:var(--f-mono);font-size:11px;color:var(--atx)}
+.ql a span{flex:1}
+.ql a em{font-style:normal;color:var(--mute);font-size:13px}
+.qlb{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.qlb a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border:2px solid var(--on-accent);border-radius:4px;color:var(--on-accent);text-decoration:none;font-weight:500}
+.qlb a:hover{background:var(--on-accent);color:var(--accent)}
+.ppl{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:16px}
+.pp{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:500;font-size:20px;background:var(--c);color:var(--on-hl);letter-spacing:.02em}
+.pp b{font-weight:500;font-size:14.5px}
+.pp span{color:var(--mute);font-size:12.5px}
+
+/* 5 · WEB PARTS DE IMAGEN (arte pre-renderizado) --------------------- */
+.img{display:block;position:relative;border-radius:var(--r);overflow:hidden;background:var(--surf);border:1px solid var(--line);text-decoration:none;color:#fff}
+.img svg{display:block;width:100%;height:auto}
+.img:hover{border-color:var(--atx)}
+.img.bn svg{aspect-ratio:2560/400;height:auto}
+
+/* 6 · POWER APPS SIMULADO ------------------------------------------- */
+.pa{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.pa-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--surf2);font-size:13px;color:var(--mute)}
+.pa-bar b{color:var(--ink);font-weight:500}
+.pa-bar .dot{width:8px;height:8px;border-radius:2px;background:#F59E0B}
+.pa-b{padding:16px}
+.flt{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.flt .fb{border:1px solid var(--line);background:none;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13.5px;color:var(--mute)}
+.flt .fb[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.flt select,.fm input,.fm select,.fm textarea{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:7px 10px;font:inherit;font-size:14px}
+table.tb{width:100%;border-collapse:collapse;font-size:14px}
+table.tb th{text-align:left;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:400;padding:8px 10px;border-bottom:1px solid var(--line)}
+table.tb td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.tb tr:last-child td{border-bottom:0}
+.note{font-size:13px;color:var(--mute);margin-top:10px}
+.fm{display:grid;gap:12px}
+.fm label{display:grid;gap:4px;font-size:13.5px;color:var(--mute)}
+.fm input,.fm select,.fm textarea{width:100%}
+.fm textarea{min-height:86px;resize:vertical}
+.fm .err{color:#FF8A7A;font-size:12.5px;min-height:1em}
+html[data-s="light"] .fm .err{color:#B3261E}
+.fm .go{background:var(--accent);color:var(--on-accent);border:0;border-radius:4px;padding:9px 16px;font-weight:600;cursor:pointer;justify-self:start}
+.ok{padding:14px 16px;border:1px solid var(--atx);border-radius:var(--r);color:var(--ink);background:var(--bg-soft)}
+
+/* 7 · EMBED (IFRAME) DENTRO DE LAS PÁGINAS --------------------------- */
+.emb{display:block;width:100%;border:0;background:var(--bg);height:var(--h-lg)}
+@container stage (max-width:900px){.emb{height:var(--h-sm)}}
+
+/* 8 · OVERLAY «VER WEB PARTS» ---------------------------------------
+   @personalizar: overlay. No altera el layout: solo outline y etiquetas absolutas. */
+.wp{position:relative;min-width:0}
+.wp-tag,.sec-tag,.ov-leg{display:none}
+html[data-wp="1"] .wp{outline:2px dashed var(--tc);outline-offset:3px}
+html[data-wp="1"] .wp[data-t="n"]{--tc:#2FBF71}
+html[data-wp="1"] .wp[data-t="i"]{--tc:#3B82F6}
+html[data-wp="1"] .wp[data-t="p"]{--tc:#F59E0B}
+html[data-wp="1"] .wp[data-t="e"]{--tc:#A855F7}
+html[data-wp="1"] .wp-tag{display:block;position:absolute;z-index:30;left:-2px;top:-3px;transform:translateY(-100%);background:var(--tc);color:#0B0C0D;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.04em;padding:2px 7px;border-radius:4px 4px 0 0;pointer-events:none;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+html[data-wp="1"] .sec{outline:1px dotted var(--mute);outline-offset:6px}
+html[data-wp="1"] .sec-tag{display:block;position:absolute;z-index:31;right:0;top:-24px;font-family:var(--f-mono);font-size:10.5px;color:var(--mute);background:var(--bg);padding:0 6px}
+html[data-wp="1"] .ov-leg{display:flex}
+
+/* 9 · PANEL DE CONTROL ---------------------------------------------- */
+.ctl{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:100;max-width:calc(100vw - 16px)}
+.ctl-full{display:flex;align-items:center;gap:6px 14px;flex-wrap:wrap;justify-content:center;background:#16181CF2;color:#E9EAEC;border:1px solid #3A3F47;border-radius:12px;padding:6px 10px;backdrop-filter:blur(8px);font-family:var(--f-sp);font-size:12.5px;box-shadow:0 8px 30px #0008}
+.ctl .g{display:flex;align-items:center;gap:6px}
+.ctl .gl{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9BA0A8}
+.ctl .seg{display:inline-flex;border:1px solid #3A3F47;border-radius:6px;overflow:hidden}
+.ctl .seg button{background:none;border:0;color:#C9CDD3;padding:4px 9px;cursor:pointer;font-size:12.5px}
+.ctl .seg button[aria-pressed="true"]{background:#E9EAEC;color:#0B0C0D;font-weight:600}
+.ctl .sw{width:20px;height:20px;border-radius:50%;border:2px solid #0000;cursor:pointer;padding:0}
+.ctl .sw[aria-pressed="true"]{border-color:#fff;box-shadow:0 0 0 2px #0B0C0D inset}
+.ctl .tg{background:none;border:1px solid #3A3F47;color:#C9CDD3;border-radius:6px;padding:4px 10px;cursor:pointer}
+.ctl .tg[aria-pressed="true"]{background:#E9EAEC;color:#0B0C0D;font-weight:600}
+.ctl a.rc{color:#E9EAEC;text-decoration:none;border:1px solid #3A3F47;border-radius:6px;padding:4px 10px}
+.ctl .mn{background:none;border:0;color:#9BA0A8;cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
+.ov-leg{gap:10px;align-items:center}
+.ov-leg i{display:inline-flex;align-items:center;gap:4px;font-style:normal;color:#C9CDD3}
+.ov-leg i::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--c)}
+.ctl-pill{display:none;background:#16181CF2;color:#E9EAEC;border:1px solid #3A3F47;border-radius:999px;padding:6px 14px;cursor:pointer;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.ctl[data-min="1"] .ctl-full{display:none}
+.ctl[data-min="1"] .ctl-pill{display:block}
+.ctl[hidden]{display:none}
+
+/* 10 · PÁGINAS: EMBED LAB Y RECETA ---------------------------------- */
+.lab{display:grid;gap:24px;grid-template-columns:1fr}
+@container stage (min-width:900px){.lab{grid-template-columns:340px 1fr}}
+.lab .box{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;align-content:start}
+.lab label{display:grid;gap:4px;font-size:13px;color:var(--mute)}
+.lab input,.lab select{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:7px 10px;font:inherit;font-size:14px;width:100%}
+.lab code,.rcp code,pre.code{font-family:var(--f-mono);font-size:12px}
+.lab .urlbox{word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-family:var(--f-mono);font-size:12px;color:var(--ink)}
+.lab .btns{display:flex;gap:8px;flex-wrap:wrap}
+.meter{border-radius:var(--r);padding:10px 12px;border:1px solid var(--line);font-size:14px}
+.meter[data-k="ok"]{border-color:#2FBF71;background:#2FBF7118}
+.meter[data-k="cut"]{border-color:#F0584B;background:#F0584B1A}
+.meter[data-k="extra"]{border-color:#F59E0B;background:#F59E0B1A}
+.pv{background:var(--bg);border:1px dashed var(--line);border-radius:var(--r);padding:12px;overflow:auto}
+.pv iframe{display:block;border:0;background:var(--bg);margin:0 auto;max-width:100%}
+.log{font-family:var(--f-mono);font-size:11.5px;color:var(--mute);max-height:150px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px}
+.reqs{margin:0;padding-left:18px;color:var(--mute);font-size:14px}
+.reqs li{margin:4px 0}
+.warn{border-left:3px solid #F59E0B;padding:8px 12px;background:#F59E0B14;font-size:14px;border-radius:0 4px 4px 0}
+.rcp{display:grid;gap:16px}
+.rcp-tabs{display:flex;gap:6px;flex-wrap:wrap}
+pre.code{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:14px;overflow:auto;max-height:560px;margin:0;color:var(--ink);line-height:1.5;white-space:pre}
+
+/* 11 · MODO EMBED (?embed=<pieza>) ----------------------------------
+   Solo la pieza: sin barra M365, header, footer ni panel. @personalizar: embed */
+html[data-embed]{background:var(--bg)}
+html[data-embed][data-bgx="transparent"],html[data-embed][data-bgx="transparent"] body{background:transparent}
+#emb{padding:20px;container:emb/inline-size}
+#emb[data-piece="header"]{padding:0}
+.emb-err{padding:24px;font-size:15px}
+.emb-err code{font-family:var(--f-mono)}
+
+/* 11a · pieza HEADER */
+.hdr{position:relative;width:100%;aspect-ratio:16/5;min-height:300px;overflow:hidden;background:var(--bg)}
+.hdr canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hdr-t{position:relative;z-index:2;padding:clamp(20px,4cqw,44px);max-width:min(560px,62%);height:100%;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.hdr-t .kick{margin:0;color:var(--atx)}
+.hdr-t h1{margin:0;font-weight:300;font-size:clamp(26px,4.2cqw,50px);line-height:1.06;letter-spacing:-.03em}
+.hdr-t .sub{margin:0;color:var(--mute);font-size:clamp(14px,1.7cqw,18px);max-width:34ch}
+.hdr-sq{display:flex;gap:6px 16px;flex-wrap:wrap;margin:6px 0 0;padding:0;list-style:none}
+@container emb (max-width:700px){.hdr{aspect-ratio:16/8;min-height:280px}.hdr-t{max-width:78%}}
+
+/* 11b · pieza IMPACT */
+.imp{display:grid;gap:18px}
+.imp-h h2{margin:0;font-weight:300;font-size:clamp(24px,3.4cqw,34px);letter-spacing:-.025em;line-height:1.1}
+.imp-h p{margin:6px 0 0;color:var(--mute);font-size:15px}
+.imp-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.imp-tabs button{border:1px solid var(--line);background:none;border-radius:999px;padding:6px 14px;cursor:pointer;font-size:14px;color:var(--mute);display:inline-flex;align-items:center;gap:7px}
+.imp-tabs button::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c,var(--atx))}
+.imp-tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.imp-body{display:grid;gap:20px;grid-template-columns:1fr;align-items:start}
+@container emb (min-width:760px){.imp-body{grid-template-columns:minmax(230px,300px) 1fr}}
+.imp-stats{display:grid;gap:10px}
+.stat{text-align:left;background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--c);border-radius:var(--r);padding:12px 14px;cursor:pointer;display:grid;gap:2px}
+.stat b{font-size:34px;font-weight:300;letter-spacing:-.03em;line-height:1.05;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat span{color:var(--mute);font-size:13.5px}
+.stat[aria-pressed="true"]{background:var(--surf2);border-color:var(--c)}
+.imp-map{margin:0;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:8px}
+.imp-map svg{display:block;width:100%;height:auto}
+.imp-map figcaption{padding:6px 8px 4px;font-size:12.5px;color:var(--mute)}
+.imp-map .bub{transition:r .5s ease,opacity .3s}
+.imp-map .ol{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;fill:var(--mute)}
+.imp-map .ov{font-size:15px;font-weight:500;fill:var(--ink)}
+
+/* 11c · pieza GRAPH */
+.gr h2{margin:0 0 4px;font-weight:300;font-size:clamp(24px,3.4cqw,34px);letter-spacing:-.025em;line-height:1.1}
+.gr p.s{margin:0 0 12px;color:var(--mute);font-size:15px}
+.gr svg{display:block;width:100%;height:auto;background:var(--surf);border:1px solid var(--line);border-radius:var(--r)}
+.gr .nd{cursor:pointer;transition:opacity .2s}
+.gr .nd.dim,.gr .lk.dim{opacity:.13}
+.gr .lk{stroke:var(--mute);stroke-opacity:.45;stroke-width:1;transition:opacity .2s}
+.gr .lk.hot{stroke:var(--atx);stroke-opacity:.95;stroke-width:1.6}
+.gr .nd:focus-visible{outline:none}
+.gr .nd:focus-visible .rg{stroke:var(--atx);stroke-width:3}
+.gr .pin .rg{stroke:var(--atx);stroke-width:3}
+.gr .hub text{fill:var(--ink);font-size:13px;font-weight:500}
+.gr .hubc{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
+.gr .ini{font-size:11px;font-weight:600;fill:var(--on-hl);pointer-events:none}
+.gr .ro{margin-top:10px;min-height:2.6em;font-size:14px;color:var(--mute)}
+.gr .ro b{color:var(--ink);font-weight:500}
+.gr .lg{display:flex;gap:6px 16px;flex-wrap:wrap;margin-top:8px}
+
+/* 11d · pieza STAGES */
+.stg h2{margin:0 0 4px;font-weight:300;font-size:clamp(24px,3.4cqw,34px);letter-spacing:-.025em;line-height:1.1}
+.stg p.s{margin:0 0 14px;color:var(--mute);font-size:15px}
+.stg-sc{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surf)}
+table.sg{width:100%;min-width:660px;border-collapse:collapse;table-layout:fixed}
+table.sg th{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:400;padding:10px 4px;text-align:center}
+table.sg th:first-child{text-align:left;padding-left:14px;width:150px}
+table.sg td{padding:0;height:58px;text-align:center;border-top:1px solid var(--line)}
+table.sg th[scope=row]{font-family:var(--font);text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink);font-weight:500;text-align:left;padding:0 10px 0 14px;border-top:1px solid var(--line)}
+table.sg th[scope=row] small{display:block;color:var(--mute);font-weight:400;font-size:12px}
+table.sg td i{display:block;height:26px;margin:0 2px;border-radius:3px;background:var(--c);opacity:0;transition:opacity .25s,transform .25s}
+table.sg td[data-l="1"] i{opacity:.35}
+table.sg td[data-l="2"] i{opacity:.95}
+table.sg td[data-l="0"] i{opacity:.07}
+table.sg.hov td i{opacity:.07}
+table.sg.hov td.on i[data-b]{opacity:1;transform:scaleY(1.2)}
+table.sg tr{outline:none}
+table.sg tbody tr:focus-visible th{box-shadow:inset 3px 0 var(--atx)}
+.stg .ro{margin-top:12px;min-height:2.6em;font-size:14px;color:var(--mute)}
+.stg .ro b{color:var(--ink);font-weight:500}
+.lgd{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;color:var(--mute);font-size:13px}
+.lgd i{display:inline-block;width:18px;height:10px;border-radius:2px;background:var(--atx);vertical-align:middle;margin-right:6px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="m365" role="banner">
+    <button class="waffle" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 16 16"><g><circle cx="2.5" cy="2.5" r="1.4"/><circle cx="8" cy="2.5" r="1.4"/><circle cx="13.5" cy="2.5" r="1.4"/><circle cx="2.5" cy="8" r="1.4"/><circle cx="8" cy="8" r="1.4"/><circle cx="13.5" cy="8" r="1.4"/><circle cx="2.5" cy="13.5" r="1.4"/><circle cx="8" cy="13.5" r="1.4"/><circle cx="13.5" cy="13.5" r="1.4"/></g></svg></button>
+    <span class="app">SharePoint</span>
+    <div class="search" aria-hidden="true">⌕ Buscar en este sitio</div>
+    <span class="av" aria-hidden="true" style="margin-left:auto">AD</span>
+  </div>
+  <header class="sh">
+    <div class="sh-in">
+      <a class="brand" href="#/home" aria-label="Atlas Design Hub, inicio">
+        <!-- @personalizar: logo del sitio (SVG inline, tinta currentColor y acento var(--accent)) -->
+        <svg viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9 22.5c0-3 2-4.6 4.6-4.6 2.4 0 4 1.5 4 3.6V25M17.6 21.5c-.8-.5-2.2-.8-3.6-.8-2.1 0-3.2.9-3.2 2.1 0 1.3 1.1 2.1 2.8 2.1 2.5 0 4-1.4 4-3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="24.5" cy="11" r="2.4" fill="var(--accent)"/><path d="M24.5 15v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <b>Atlas Design Hub</b>
+      </a>
+      <!-- @personalizar: navegación del sitio -->
+      <nav class="nav" aria-label="Navegación del sitio" id="nav"></nav>
+    </div>
+  </header>
+  <main class="page"><div class="stage" id="stage" data-w="1204"></div></main>
+  <footer class="foot"><div class="foot-in">
+    <span>Atlas Design Hub es un sitio ficticio. Sirve para enseñar la metodología del repo SharePoint Simulator.</span>
+    <span><a href="../">Ir a la guía</a></span>
+  </div></footer>
+</div>
+
+<div class="ctl" id="ctl" data-min="0" role="region" aria-label="Controles del simulador">
+  <div class="ctl-full">
+    <div class="g"><span class="gl">Estilo</span><div class="seg" data-k="s"><button data-v="dark">Oscuro</button><button data-v="light">Claro</button></div></div>
+    <div class="g"><span class="gl">Acento</span>
+      <button class="sw" data-k="a" data-v="cobalt" style="background:#4C7DFF" aria-label="Acento cobalto"></button>
+      <button class="sw" data-k="a" data-v="lime" style="background:#B7E34A" aria-label="Acento lima"></button>
+      <button class="sw" data-k="a" data-v="coral" style="background:#FF6B4A" aria-label="Acento coral"></button>
+      <button class="sw" data-k="a" data-v="amber" style="background:#F2B43C" aria-label="Acento ámbar"></button>
+    </div>
+    <div class="g"><span class="gl">Fuente</span><div class="seg" data-k="f"><button data-v="brand">Marca</button><button data-v="sp" title="La letra que SharePoint pinta de verdad">Segoe UI</button></div></div>
+    <div class="g"><span class="gl">Ancho</span><div class="seg" data-k="w"><button data-v="1204">1204</button><button data-v="760">760</button><button data-v="390">390</button></div></div>
+    <div class="g"><button class="tg" id="wpTg" aria-pressed="false">Ver web parts</button>
+      <span class="ov-leg" aria-label="Leyenda del overlay"><i style="--c:#2FBF71">Nativo</i><i style="--c:#3B82F6">Imagen</i><i style="--c:#F59E0B">Power Apps</i><i style="--c:#A855F7">Embed</i></span></div>
+    <a class="rc" href="#/recipe">Receta</a>
+    <button class="mn" id="ctlMin" aria-label="Minimizar panel" title="Minimizar">–</button>
+  </div>
+  <button class="ctl-pill" id="ctlPill" aria-label="Abrir panel del simulador" aria-expanded="false">Simulador</button>
+</div>
+<script>
+(function(){
+'use strict';
+
+/* 0 · UTILIDADES ----------------------------------------------------- */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const lsGet=k=>{try{return localStorage.getItem('spsim.'+k)}catch(e){return null}};
+const lsSet=(k,v)=>{try{localStorage.setItem('spsim.'+k,v)}catch(e){}};
+function rng(seed){let s=(seed>>>0)||1;return()=>{s=Math.imul(s^(s>>>15),2246822507);s=Math.imul(s^(s>>>13),3266489909);s^=s>>>16;return(s>>>0)/4294967296}}
+/* Reloj de la simulación. Si existe window.__simTime (ms) lo usamos: así la herramienta de GIF congela el tiempo. */
+const FF=0; /* se ajusta con ?ff=<segundos> en el modo embed */
+let FFS=0;
+const now=()=>(window.__simTime!=null?window.__simTime:performance.now())+FFS*1000;
+const raf=(fn)=>requestAnimationFrame(fn);
+
+/* 1 · PARÁMETROS Y OPCIONES ------------------------------------------
+   El hash (#/home?s=light) o el query (?s=light) SIEMPRE mandan sobre localStorage. */
+const QS=new URLSearchParams(location.search);
+function hashParts(){const h=location.hash.replace(/^#/,'');const i=h.indexOf('?');return{path:(i<0?h:h.slice(0,i))||'/home',q:new URLSearchParams(i<0?'':h.slice(i+1))}}
+function P(k){const v=hashParts().q.get(k);return v!==null?v:QS.get(k)}
+const OPT={s:['dark','light'],a:['cobalt','lime','coral','amber'],f:['brand','sp'],w:['1204','760','390'],wp:['0','1']};
+const DEF={s:'dark',a:'lime',f:'brand',w:'1204',wp:'0'};
+const PERSIST={s:1,a:1,f:1};
+function getOpt(k){let v=P(k);if(v==null||!OPT[k].includes(v)){v=PERSIST[k]?lsGet(k):null;if(v==null||!OPT[k].includes(v))v=DEF[k]}return v}
+function setOpt(k,v){
+  if(PERSIST[k])lsSet(k,v);
+  const{path,q}=hashParts();q.set(k,v);
+  history.replaceState(null,'','#'+path+'?'+q.toString());
+  applyOpts();
+}
+function applyOpts(){
+  const H=document.documentElement;
+  ['s','a','f'].forEach(k=>H.dataset[k]=getOpt(k));
+  H.dataset.wp=getOpt('wp');
+  const st=$('#stage');if(st)st.dataset.w=getOpt('w');
+  $$('#ctl [data-k]').forEach(el=>{
+    const k=el.dataset.k;
+    if(el.classList.contains('seg')){$$('button',el).forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===getOpt(k))))}
+    else el.setAttribute('aria-pressed',String(el.dataset.v===getOpt(k)));
+  });
+  const tg=$('#wpTg');if(tg)tg.setAttribute('aria-pressed',String(getOpt('wp')==='1'));
+  renderNav();
+  window.dispatchEvent(new Event('sim:theme'));
+}
+function qsKeep(){const{q}=hashParts();const o=new URLSearchParams();['s','a','f','w','wp','ctl'].forEach(k=>{if(q.get(k)!=null)o.set(k,q.get(k))});const t=o.toString();return t?'?'+t:''}
+
+/* 2 · DATOS FICTICIOS ------------------------------------------------
+   @personalizar: datos semilla (squads, personas, proyectos, eventos). Todo es inventado. */
+const SQ=[
+  {id:'model',n:'Model Lab',line:'Coordinación y calidad de modelos',c:'var(--hl-model)'},
+  {id:'scan',n:'Site Scan',line:'Captura y lectura del sitio',c:'var(--hl-scan)'},
+  {id:'form',n:'Form Finder',line:'Opciones y exploración de forma',c:'var(--hl-form)'},
+  {id:'insight',n:'Insight Desk',line:'Datos y tableros para decidir',c:'var(--hl-insight)'}
+];
+const SQ_BY=Object.fromEntries(SQ.map(s=>[s.id,s]));
+const PROJECTS=[
+  {t:'Torre Mirador',sq:'model',area:'Oficinas',yr:2026,st:'En curso',kind:'bars'},
+  {t:'Parque Lineal Cumbre',sq:'scan',area:'Espacio público',yr:2025,st:'Entregado',kind:'waves'},
+  {t:'Centro Aurora',sq:'form',area:'Retail',yr:2026,st:'En curso',kind:'rings'},
+  {t:'Campus Valle Alto',sq:'insight',area:'Educación',yr:2025,st:'Entregado',kind:'dots'},
+  {t:'Hospital Costa Azul',sq:'model',area:'Salud',yr:2026,st:'Piloto',kind:'bars'},
+  {t:'Plaza Norte',sq:'form',area:'Espacio público',yr:2024,st:'Entregado',kind:'rings'},
+  {t:'Residencial Isla Verde',sq:'insight',area:'Vivienda',yr:2026,st:'En curso',kind:'dots'},
+  {t:'Hub Logístico Puerto',sq:'scan',area:'Retail',yr:2025,st:'Piloto',kind:'waves'},
+  {t:'Biblioteca del Río',sq:'form',area:'Educación',yr:2024,st:'Entregado',kind:'rings'},
+  {t:'Estación Central Mar',sq:'model',area:'Oficinas',yr:2026,st:'En curso',kind:'bars'}
+];
+const AREAS=[...new Set(PROJECTS.map(p=>p.area))];
+const EVENTS=[
+  {d:'12',m:'Dic',t:'Taller: modelos federados sin dolor',w:'Sala Atlas · 10:00'},
+  {d:'18',m:'Dic',t:'Café de datos: tableros en 20 minutos',w:'En línea · 12:30'},
+  {d:'09',m:'Ene',t:'Demo: lectura de nubes de puntos',w:'Sala Atlas · 11:00'}
+];
+const TEAM=[
+  {i:'LM',n:'Lía M.',r:'Líder de Model Lab',sq:'model'},{i:'TV',n:'Tomás V.',r:'Coordinación BIM',sq:'model'},
+  {i:'CS',n:'Camila S.',r:'Captura de sitio',sq:'scan'},{i:'ML',n:'Mateo L.',r:'Lectura de nubes',sq:'scan'},
+  {i:'RP',n:'Renata P.',r:'Diseño de opciones',sq:'form'},{i:'DC',n:'Diego C.',r:'Exploración de forma',sq:'form'},
+  {i:'VT',n:'Valeria T.',r:'Líder de Insight Desk',sq:'insight'},{i:'IO',n:'Iván O.',r:'Tableros y datos',sq:'insight'}
+];
+/* Silueta abstracta de puntos y 6 oficinas ficticias (coordenadas 0..1). Se reutiliza en las piezas header e impact. */
+const LAND=[[.05,.45],[.12,.25],[.25,.18],[.38,.22],[.46,.12],[.6,.1],[.72,.2],[.86,.22],[.95,.38],[.9,.55],[.8,.62],[.74,.8],[.6,.9],[.5,.78],[.42,.85],[.3,.7],[.18,.72],[.08,.62]];
+const OFF=[{n:'Norte',x:.2,y:.42},{n:'Valle',x:.42,y:.34},{n:'Costa',x:.64,y:.24},{n:'Cumbre',x:.82,y:.42},{n:'Puerto',x:.58,y:.7},{n:'Isla',x:.3,y:.62}];
+const LINKS=[[0,1],[1,2],[2,3],[1,4],[4,5],[0,5],[3,4]];
+function inLand(u,v){let c=false;for(let i=0,j=LAND.length-1;i<LAND.length;j=i++){const[a,b]=LAND[i],[x,y]=LAND[j];if(((b>v)!==(y>v))&&(u<(x-a)*(v-b)/(y-b)+a))c=!c}return c}
+
+/* 3 · ARTE GENERADO (sin fotos) -------------------------------------- */
+function art(seed,kind,w=320,h=200){
+  const r=rng(seed);let g='';
+  if(kind==='bars'){for(let i=0;i<14;i++){const bh=20+r()*130;g+=`<rect x="${14+i*21}" y="${h-14-bh}" width="14" height="${bh}" fill="currentColor" opacity="${(.22+.6*i/14).toFixed(2)}"/>`}}
+  else if(kind==='rings'){for(let i=0;i<7;i++){g+=`<circle cx="${w*.62}" cy="${h*.55}" r="${14+i*20}" fill="none" stroke="currentColor" stroke-width="1.4" opacity="${(.85-i*.11).toFixed(2)}"/>`}g+=`<circle cx="${w*.62}" cy="${h*.55}" r="7" fill="currentColor"/>`}
+  else if(kind==='dots'){for(let y=12;y<h;y+=16)for(let x=12;x<w;x+=16){const a=Math.max(0,1-Math.abs(x/w-y/h-.12)*3.2);g+=`<circle cx="${x}" cy="${y}" r="${(1+3.4*a).toFixed(1)}" fill="currentColor" opacity="${(.2+.8*a).toFixed(2)}"/>`}}
+  else{for(let k=0;k<8;k++){let d='';for(let x=0;x<=w;x+=10){const y=h*.2+k*17+Math.sin(x*.035+k*.5+seed)*14;d+=(x?'L':'M')+x+' '+y.toFixed(1)}g+=`<path d="${d}" fill="none" stroke="currentColor" stroke-width="1.5" opacity="${(.9-k*.1).toFixed(2)}"/>`}}
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${g}</svg>`;
+}
+function bannerSVG(title,sub,seed){
+  const r=rng(seed);let d='';
+  for(let y=24;y<400;y+=22)for(let x=1300;x<2560;x+=22){const a=Math.max(0,1-Math.abs((x-1300)/1260-(y/400)*1.1-.1)*2.4);if(a>.04)d+=`<circle cx="${x}" cy="${y}" r="${(1+5*a).toFixed(1)}" fill="var(--accent)" opacity="${(.15+.8*a*(.6+.4*r())).toFixed(2)}"/>`}
+  return `<svg viewBox="0 0 2560 400" role="img" aria-label="${esc(title)}. ${esc(sub)}"><rect width="2560" height="400" fill="var(--surf)"/>${d}<text x="96" y="150" style="font-family:var(--f-mono);font-size:26px;letter-spacing:.2em;fill:var(--atx)">ATLAS DESIGN HUB</text><text x="96" y="250" style="font-family:var(--font);font-size:88px;font-weight:300;letter-spacing:-2px;fill:var(--ink)">${esc(title)}</text><text x="96" y="318" style="font-family:var(--font);font-size:34px;fill:var(--mute)">${esc(sub)}</text></svg>`;
+}
+function caseSVG(title,meta,kind,seed,c){
+  return `<svg viewBox="0 0 760 480" role="img" aria-label="${esc(title)}. ${esc(meta)}"><rect width="760" height="480" fill="var(--surf2)"/><g style="color:${c}" transform="translate(0,0) scale(2.375 1.5)">${art(seed,kind).replace(/^<svg[^>]*>|<\/svg>$/g,'')}</g><rect x="0" y="330" width="760" height="150" fill="var(--bg)" opacity=".86"/><text x="32" y="384" style="font-family:var(--f-mono);font-size:14px;letter-spacing:.16em;fill:${c}">${esc(meta.toUpperCase())}</text><text x="32" y="436" style="font-family:var(--font);font-size:38px;font-weight:300;letter-spacing:-.8px;fill:var(--ink)">${esc(title)}</text></svg>`;
+}
+
+/* 4 · PIEZAS EMBEBIBLES (registro) ------------------------------------
+   @personalizar: EMBED_PIECES. Para agregar una pieza: (1) una entrada aquí, (2) una función mountXxx en el
+   bloque 12, (3) registrarla en PIECE_MOUNT. h = alto FIJO que se pone en el web part Embed (máximo de todos
+   sus estados); se mide con el medidor del Embed lab. */
+const EMBED_PIECES={
+  header:{title:'Header animado',desc:'Campo halftone que respira, 6 oficinas y paquetes de datos. Bucle de 12 s.',gif:'header',h:{1204:380,760:300}},
+  stages:{title:'Dónde entra cada squad',desc:'Matriz de 4 squads por 8 etapas del proyecto, con resaltado al pasar.',gif:null,h:{1204:490,760:480}},
+  impact:{title:'Impacto por squad',desc:'Pestañas por squad, cifras clicables y burbujas proporcionales al área.',gif:null,h:{1204:700,760:910}},
+  graph:{title:'Grafo de comunidades',desc:'24 personas ficticias y 5 comunidades; resalta vecinos y se navega con teclado.',gif:null,h:{1204:845,760:585}}
+};
+const PIECE_MOUNT={};
+function embedFrame(piece){
+  const E=EMBED_PIECES[piece];
+  return `<iframe class="emb" title="${esc(E.title)}" src="?embed=${piece}&s=${getOpt('s')}&a=${getOpt('a')}&f=${getOpt('f')}" style="--h-lg:${E.h[1204]}px;--h-sm:${E.h[760]}px"></iframe>`;
+}
+
+/* 5 · MODELO DE PÁGINA ----------------------------------------------
+   Cada página es DATO: PAGES[key] = {title, slug, sections:[{layout,bg,cols:[[wp...]]}]}.
+   De ese mismo modelo salen el DOM y la receta (JSON, Markdown, manifiesto).
+   layout: '1' | '2' | '3' | '13' (1/3+2/3) | '31' (2/3+1/3) | 'full' ; bg: none|neutral|soft|strong
+   wp(type, webpart, html, meta): type n=Nativo, i=Imagen pre-renderizada, p=Power Apps, e=Embed. */
+const WPT={n:'Nativo',i:'Imagen',p:'Power Apps',e:'Embed'};
+const LNAME={'1':'1 columna','2':'2 columnas','3':'3 columnas','13':'1/3 + 2/3','31':'2/3 + 1/3','full':'ancho completo'};
+const LJSON={'1':'1','2':'2','3':'3','13':'1/3-2/3','31':'2/3-1/3','full':'fullwidth'};
+const COLW={'1':[2408],'2':[1172,1172],'3':[760,760,760],'13':[760,1584],'31':[1584,760],'full':[2560]};
+function wp(type,webpart,html,meta){return Object.assign({type,webpart,html},meta||{})}
+function sec(layout,bg,cols,opts){return Object.assign({layout,bg:bg||'none',cols},opts||{})}
+function embedWp(piece,nota){const E=EMBED_PIECES[piece];return wp('e','Embed',()=>embedFrame(piece),{pieza:piece,motivo:piece,gif:E.gif,nota:nota||E.desc,alt:E.title+'. '+E.desc,vinculo:null})}
+
+/* helpers de contenido nativo */
+const T=h=>`<div class="t">${h}</div>`;
+function ql(items,label){return `<nav class="ql" aria-label="${esc(label)}">`+items.map(([i,t,m,u])=>`<a href="${u}"${/^http/.test(u)?' target="_blank" rel="noopener"':''}><i>${i}</i><span>${t}</span><em>${m||''}</em></a>`).join('')+`</nav>`}
+function chip(sqid){const s=SQ_BY[sqid];return `<span class="chip" style="--c:${s.c}">${s.n}</span>`}
+function projectCards(n){return PROJECTS.slice(0,n).map((p,i)=>`<a class="card" style="--c:${SQ_BY[p.sq].c}" href="#/projects${qsKeep()}"><div class="art">${art(i*7+3,p.kind)}</div><div class="cb">${chip(p.sq)}<div class="ct">${esc(p.t)}</div><div class="cm">${esc(p.area)} · ${p.yr}</div></div></a>`).join('')}
+function hcHTML(){return `<div class="wh"><h3>Proyectos destacados</h3><div class="car"><button class="carbtn" data-car="-1" aria-label="Anterior">‹</button><button class="carbtn" data-car="1" aria-label="Siguiente">›</button></div></div><div class="rail" data-rail tabindex="0" aria-label="Carrusel de proyectos destacados">${projectCards(5)}</div>`}
+function eventsHTML(){return `<div class="wh"><h3>Próximos eventos</h3></div>`+EVENTS.map(e=>`<a class="ev" href="https://example.com/eventos" target="_blank" rel="noopener"><div class="d"><b>${e.d}</b><span>${e.m}</span></div><div><div class="et">${esc(e.t)}</div><div class="em">${esc(e.w)}</div></div></a>`).join('')}
+function peopleHTML(){return `<div class="wh"><h3>Conoce al equipo</h3></div><div class="ppl">`+TEAM.map(p=>`<div class="pp"><div class="av" style="--c:${SQ_BY[p.sq].c}" aria-hidden="true">${p.i}</div><b>${esc(p.n)}</b><span>${esc(p.r)}</span></div>`).join('')+`</div>`}
+
+/* Power Apps simulado 1: buscador de proyectos que lee una List */
+function finderHTML(){
+  return `<div class="pa" data-finder><div class="pa-bar"><span class="dot"></span><b>Project finder</b> · app de Power Apps leyendo la List «Projects»</div><div class="pa-b">
+  <div class="flt" role="group" aria-label="Filtrar por squad"><button class="fb" data-fsq="all" aria-pressed="true">Todos</button>${SQ.map(s=>`<button class="fb" data-fsq="${s.id}" aria-pressed="false">${s.n}</button>`).join('')}
+  <select data-farea aria-label="Filtrar por área"><option value="all">Todas las áreas</option>${AREAS.map(a=>`<option>${a}</option>`).join('')}</select></div>
+  <div style="overflow-x:auto"><table class="tb"><thead><tr><th>Proyecto</th><th>Squad</th><th>Área</th><th>Año</th><th>Estado</th></tr></thead><tbody data-frows></tbody></table></div>
+  <p class="note" data-fcount aria-live="polite"></p></div></div>`;
+}
+function renderFinder(root){
+  const sq=$('[data-fsq][aria-pressed="true"]',root).dataset.fsq,ar=$('[data-farea]',root).value;
+  const rows=PROJECTS.filter(p=>(sq==='all'||p.sq===sq)&&(ar==='all'||p.area===ar));
+  $('[data-frows]',root).innerHTML=rows.map(p=>`<tr><td>${esc(p.t)}</td><td>${chip(p.sq)}</td><td>${p.area}</td><td>${p.yr}</td><td>${p.st}</td></tr>`).join('')||`<tr><td colspan="5">Sin resultados con esos filtros.</td></tr>`;
+  $('[data-fcount]',root).textContent=`${rows.length} de ${PROJECTS.length} proyectos. Los filtros viven dentro de la app; SharePoint solo la muestra en un marco.`;
+}
+/* Power Apps simulado 2: formulario Submit an idea */
+function ideaHTML(){
+  return `<div class="pa" data-idea><div class="pa-bar"><span class="dot"></span><b>Submit an idea</b> · app de Power Apps que escribe en la List «Ideas»</div><div class="pa-b">
+  <form class="fm" novalidate>
+   <label>Título de la idea<input name="t" maxlength="80" autocomplete="off"><span class="err" data-e="t"></span></label>
+   <label>Squad que debería recibirla<select name="sq"><option value="">Elige uno</option>${SQ.map(s=>`<option value="${s.id}">${s.n}</option>`).join('')}</select><span class="err" data-e="sq"></span></label>
+   <label>¿Qué problema resuelve?<textarea name="d"></textarea><span class="err" data-e="d"></span></label>
+   <button class="go" type="submit">Enviar idea</button>
+  </form>
+  <div class="ok" data-ok hidden role="status"></div>
+  <p class="note">Simulado: no envía nada. En la app real, el botón haría <code>Patch(Ideas, Defaults(Ideas), {…})</code>.</p></div></div>`;
+}
+
+/* 6 · PÁGINAS (@personalizar: contenido de cada página) --------------- */
+const PAGES={
+  home:{title:'Inicio',slug:'inicio',sections:[
+    sec('1','none',[[embedWp('header','Header animado de la portada. Alternativa sin Embed: el GIF del mismo bucle en un web part Image.')]]),
+    sec('31','none',[
+      [wp('n','Text',T(`<h2>Todo el estudio, a un clic.</h2><p>Aquí viven las herramientas, los squads y los casos de Atlas. Empieza por el squad que necesitas o explora un proyecto.</p><blockquote>Si algo se usa dos veces, merece una herramienta.</blockquote>`),{motivo:'bienvenida',cfg:{estilos:'H2 + Normal + Quote',color_texto:'themePrimary'}})],
+      [wp('n','Quick links',()=>ql([['01','Proyectos','Casos','#/projects'+qsKeep()],['02','Comunidad','Personas','#/community'+qsKeep()],['03','Pedir ayuda','Formulario','https://example.com/ayuda'],['04','Guía de herramientas','Docs','https://example.com/guia']],'Accesos rápidos'),{motivo:'accesos',cfg:{layout:'List',elementos:4}})]
+    ]),
+    sec('1','neutral',[[embedWp('stages','Figura completa con su propio título. Fondo de sección Neutral para separar bloques.')]]),
+    sec('31','none',[
+      [wp('n','Highlighted content',hcHTML,{motivo:'proyectos',cfg:{origen:'Páginas de este sitio',filtro:'Content type = Project',layout:'Carousel',elementos:5,orden:'Más recientes'}})],
+      [wp('n','Events',eventsHTML,{motivo:'eventos',cfg:{lista:'Events',layout:'Compact',elementos:3}})]
+    ]),
+    sec('1','none',[[embedWp('impact','Cifras y mapa con estado interno: por eso no es una imagen.')]]),
+    sec('1','none',[[wp('n','People',peopleHTML,{motivo:'equipo',cfg:{personas:'8 personas (ficticias en esta maqueta)',layout:'Compact'}})]]),
+    sec('1','strong',[
+      [wp('n','Text',T(`<h2 style="margin:0">¿Tienes un reto de diseño?</h2><p style="color:var(--on-accent)">Cuéntanos y armamos la ruta con el squad indicado.</p>`),{motivo:'cta-texto',cfg:{estilos:'H2 + Normal',fondo_seccion:'Strong (themePrimary)'}}),
+       wp('n','Quick links',()=>`<nav class="qlb" aria-label="Siguiente paso"><a href="https://example.com/pedir">Pedir ayuda <span aria-hidden="true">→</span></a><a href="#/projects${qsKeep()}">Ver casos <span aria-hidden="true">→</span></a><a href="#/community${qsKeep()}">Conocer la comunidad <span aria-hidden="true">→</span></a></nav>`,{motivo:'cta-botones',cfg:{layout:'Button',elementos:3}})]
+    ])
+  ]},
+  projects:{title:'Proyectos',slug:'proyectos',sections:[
+    sec('full','none',[[wp('i','Image',()=>bannerSVG('Proyectos','Casos reales de cada squad, con lo que se aprendió.',11),{motivo:'banner',ancho_px:2560,alt:'Atlas Design Hub. Proyectos. Casos reales de cada squad, con lo que se aprendió.',vinculo:null,nota:'Título de marca como imagen con alt completo. Sección de ancho completo (solo Communication Site).'})]]),
+    sec('1','none',[[wp('p','Power Apps',finderHTML,{motivo:'finder',alto_px:520,lista:'Projects',nota:'Interacción con datos: filtros sobre una List. Solo aquí tiene sentido Power Apps.'})]]),
+    sec('3','none',[
+      [wp('i','Image',()=>`<a class="img" href="https://example.com/casos/torre-mirador" target="_blank" rel="noopener">${caseSVG('Torre Mirador','Model Lab · Oficinas','bars',3,'var(--hl-model)')}</a>`,{motivo:'caso-torre',alt:'Torre Mirador. Model Lab, oficinas. Un modelo federado que cuatro equipos revisan a la vez.',vinculo:'https://example.com/casos/torre-mirador'})],
+      [wp('i','Image',()=>`<a class="img" href="https://example.com/casos/parque-cumbre" target="_blank" rel="noopener">${caseSVG('Parque Lineal Cumbre','Site Scan · Espacio público','waves',17,'var(--hl-scan)')}</a>`,{motivo:'caso-parque',alt:'Parque Lineal Cumbre. Site Scan, espacio público. Una nube de puntos para decidir el trazado.',vinculo:'https://example.com/casos/parque-cumbre'})],
+      [wp('i','Image',()=>`<a class="img" href="https://example.com/casos/centro-aurora" target="_blank" rel="noopener">${caseSVG('Centro Aurora','Form Finder · Retail','rings',29,'var(--hl-form)')}</a>`,{motivo:'caso-aurora',alt:'Centro Aurora. Form Finder, retail. Cuarenta opciones de planta comparadas en un día.',vinculo:'https://example.com/casos/centro-aurora'})]
+    ])
+  ]},
+  community:{title:'Comunidad',slug:'comunidad',sections:[
+    sec('1','none',[[embedWp('graph','Grafo con hover, foco y selección. SharePoint no puede hacerlo nativo.')]]),
+    sec('3','neutral',[
+      [wp('n','Quick links',ql([['G1','Guild de automatización','Jueves','https://example.com/guilds/auto'],['G2','Guild de datos','Martes','https://example.com/guilds/datos'],['G3','Guild de formación','Mensual','https://example.com/guilds/formacion']],'Guilds'),{motivo:'guilds',cfg:{layout:'List',titulo_web_part:'Guilds',elementos:3}})],
+      [wp('n','Text',T(`<h3>Horas de consulta</h3><p><strong>Martes y jueves</strong>, de 11:00 a 12:00. Trae tu modelo roto, tu tablero lento o tu idea a medias.</p>`),{motivo:'consulta',cfg:{estilos:'H3 + Normal'}})],
+      [wp('n','Quick links',ql([['↗','Plantillas del estudio','Docs','https://example.com/plantillas'],['↗','Guía de nombres','Docs','https://example.com/nombres'],['↗','Archivo de talleres','Videos','https://example.com/talleres']],'Recursos'),{motivo:'recursos',cfg:{layout:'List',titulo_web_part:'Recursos',elementos:3}})]
+    ]),
+    sec('2','none',[
+      [wp('n','Text',T(`<h2>Una idea vale más compartida.</h2><p>Cada idea llega a la List «Ideas» y el squad indicado la revisa cada semana. Las mejores se vuelven herramientas.</p>`),{motivo:'ideas-texto',cfg:{estilos:'H2 + Normal'}})],
+      [wp('p','Power Apps',ideaHTML,{motivo:'ideas-form',alto_px:520,lista:'Ideas',nota:'Formulario con validación que escribe en una List.'})]
+    ])
+  ]}
+};
+
+/* Normalización: ruta sN.cM.wK, nombre de archivo y ancho de imagen salen del propio modelo */
+function normalize(key){
+  const Pg=PAGES[key];if(Pg._n)return Pg;
+  Pg.sections.forEach((s,si)=>s.cols.forEach((col,ci)=>col.forEach((w,wi)=>{
+    w.ruta=`s${si}.c${ci}.w${wi}`;
+    const base=`atlas-${Pg.slug}-s${si}-c${ci}-w${wi}-${w.motivo||'pieza'}`;
+    if(w.type==='i'){w.ancho_px=w.ancho_px||COLW[s.layout][ci];w.archivo=base+'.png'}
+    if(w.type==='e'){w.archivo=base+'.png';if(w.gif)w.archivo_gif=base+'.gif'}
+  })));
+  Pg._n=1;return Pg;
+}
+Object.keys(PAGES).forEach(normalize);
+
+/* 7 · RENDER ---------------------------------------------------------- */
+function wpHTML(w){
+  const inner=typeof w.html==='function'?w.html():w.html;
+  return `<div class="wp" data-t="${w.type}" data-path="${w.ruta}"><span class="wp-tag">${WPT[w.type]} · ${esc(w.webpart)} · ${w.ruta}</span>${inner}</div>`;
+}
+function secHTML(s,si){
+  return `<section class="sec" data-l="${s.layout}" data-bg="${s.bg}"><span class="sec-tag">Sección ${si} · ${LNAME[s.layout]} · fondo ${s.bg}</span>`+s.cols.map(col=>`<div class="col">${col.map(wpHTML).join('')}</div>`).join('')+`</section>`;
+}
+function renderPage(key){const Pg=PAGES[key];return `<h1 class="sr">${esc(Pg.title)}</h1>`+Pg.sections.map(secHTML).join('')}
+
+/* 8 · NAVEGACIÓN Y ROUTER --------------------------------------------- */
+const ROUTES={'/home':'home','/projects':'projects','/community':'community','/embed-lab':'lab','/recipe':'recipe'};
+/* @personalizar: navegación del sitio [ruta, etiqueta, esHerramienta] */
+const NAV=[['/home','Inicio'],['/projects','Proyectos'],['/community','Comunidad'],['sp'],['/embed-lab','Embed lab',1],['/recipe','Receta',1]];
+function renderNav(){
+  const cur=hashParts().path;
+  $('#nav').innerHTML=NAV.map(n=>n[0]==='sp'?'<span class="sp"></span>':`<a href="#${n[0]}${qsKeep()}"${n[2]?' class="tool"':''}${cur===n[0]?' aria-current="page"':''}>${n[1]}</a>`).join('');
+}
+function route(){
+  const{path}=hashParts();const key=ROUTES[path]||'home';
+  const st=$('#stage');
+  if(key==='lab')st.innerHTML=renderLab();
+  else if(key==='recipe')st.innerHTML=renderRecipe();
+  else st.innerHTML=renderPage(key);
+  document.title=({home:'Inicio',projects:'Proyectos',community:'Comunidad',lab:'Embed lab',recipe:'Receta'}[key])+' · Atlas Design Hub (simulador)';
+  if(key==='projects')renderFinder($('[data-finder]'));
+  if(key==='lab')bindLab();
+  if(key==='recipe')bindRecipe();
+  applyOpts();
+  window.scrollTo(0,0);
+}
+
+/* 9 · INTERACCIÓN GLOBAL (delegación) ----------------------------------- */
+document.addEventListener('click',e=>{
+  const car=e.target.closest('[data-car]');
+  if(car){const rail=$('[data-rail]',car.closest('.wp'));rail.scrollBy({left:+car.dataset.car*276,behavior:'smooth'});return}
+  const fb=e.target.closest('[data-fsq]');
+  if(fb){const root=fb.closest('[data-finder]');$$('[data-fsq]',root).forEach(b=>b.setAttribute('aria-pressed',String(b===fb)));renderFinder(root);return}
+  const seg=e.target.closest('#ctl .seg button');
+  if(seg){setOpt(seg.parentElement.dataset.k,seg.dataset.v);return}
+  const sw=e.target.closest('#ctl .sw');
+  if(sw){setOpt('a',sw.dataset.v);return}
+});
+document.addEventListener('change',e=>{
+  if(e.target.matches('[data-farea]'))renderFinder(e.target.closest('[data-finder]'));
+});
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('[data-idea] form');if(!f)return;e.preventDefault();
+  const v=n=>f.elements[n].value.trim();let bad=false;
+  const set=(n,m)=>{$('[data-e="'+n+'"]',f).textContent=m||'';if(m)bad=true};
+  set('t',v('t').length<5?'Escribe un título de al menos 5 caracteres.':'');
+  set('sq',v('sq')?'':'Elige un squad.');
+  set('d',v('d').length<15?'Cuéntanos un poco más (mínimo 15 caracteres).':'');
+  const ok=$('[data-ok]',f.closest('[data-idea]'));
+  if(bad){ok.hidden=true;return}
+  ok.hidden=false;ok.textContent=`Gracias. «${v('t')}» quedó registrada para ${SQ_BY[v('sq')].n}. (Simulado: no se envió nada.)`;f.reset();
+});
+$('#wpTg').addEventListener('click',()=>setOpt('wp',getOpt('wp')==='1'?'0':'1'));
+function setMin(m){$('#ctl').dataset.min=m?'1':'0';$('#ctlPill').setAttribute('aria-expanded',String(!m));lsSet('min',m?'1':'0')}
+$('#ctlMin').addEventListener('click',()=>setMin(true));
+$('#ctlPill').addEventListener('click',()=>setMin(false));
+
+/* 10 · EMBED LAB ------------------------------------------------------- */
+function embedBase(){return /^https?:/.test(location.protocol)?location.origin+location.pathname:'https://TU-USUARIO.github.io/sharepoint-simulator/simulator/index.html'}
+function renderLab(){
+  return `<h1 class="sr">Embed lab</h1><div class="t" style="margin:16px 0 18px"><h2>Embed lab</h2><p>Así se comporta una pieza dentro del web part Embed. Cambia el alto fijo y mira qué pasa.</p></div>
+  <div class="lab"><div class="box">
+    <label>Pieza<select id="labPiece">${Object.keys(EMBED_PIECES).map(k=>`<option value="${k}">${k} · ${esc(EMBED_PIECES[k].title)}</option>`).join('')}</select></label>
+    <label>Ancho de la columna<select id="labW"><option value="1204">1204 px (escritorio)</option><option value="760">760 px</option><option value="390">390 px (móvil)</option></select></label>
+    <label>Alto fijo del web part (px)<input id="labH" type="number" min="100" max="2000" step="10"></label>
+    <div><div class="mono" style="margin-bottom:6px;color:var(--mute)">URL para pegar en Embed</div><div class="urlbox" id="labUrl"></div></div>
+    <div class="btns"><button class="btn" id="labCopyUrl">Copiar URL</button><button class="btn" id="labCopyIf">Copiar iframe</button></div>
+    <div class="meter" id="labMeter" data-k="ok" aria-live="polite">Esperando a la pieza…</div>
+    <div class="warn"><strong>SharePoint no escucha el mensaje de alto.</strong> La pieza avisa su alto con postMessage, pero el web part Embed lo ignora. Por eso el alto se fija a mano con el máximo de todos los estados (p. ej. con una celda abierta).</div>
+    <div><div class="mono" style="margin-bottom:6px;color:var(--mute)">Requisitos</div><ul class="reqs"><li>Un admin permite el dominio en «HTML Field Security».</li><li>La URL debe ser https y servir la pieza desde la misma carpeta que sus recursos.</li><li>Alto fijo en píxeles; activa «ancho completo» si la sección es de 1 columna.</li><li>Alternativa sin permisos: el GIF del bucle en un web part Image (máx. 3 MB).</li></ul></div>
+    <div><div class="mono" style="margin-bottom:6px;color:var(--mute)">Mensajes recibidos</div><div class="log" id="labLog" role="log" aria-live="off">(ninguno)</div></div>
+  </div><div class="pv" id="labPv"></div></div>`;
+}
+let labNat=null;
+function bindLab(){
+  const sel=$('#labPiece'),wsel=$('#labW'),hin=$('#labH'),pv=$('#labPv'),url=$('#labUrl');
+  const piece0=P('piece');if(piece0&&EMBED_PIECES[piece0])sel.value=piece0;
+  function iframeCode(){return `<iframe src="${url.textContent}" width="100%" height="${hin.value}" frameborder="0" style="border:0;background:#0B0C0D"></iframe>`}
+  function build(resetH){
+    const k=sel.value,w=wsel.value;labNat=null;
+    if(resetH)hin.value=EMBED_PIECES[k].h[w==='390'?760:w]||EMBED_PIECES[k].h[760];
+    url.textContent=`${embedBase()}?embed=${k}&s=${getOpt('s')}&a=${getOpt('a')}`;
+    pv.innerHTML=`<iframe id="labIf" title="Vista previa de ${esc(k)}" src="?embed=${k}&s=${getOpt('s')}&a=${getOpt('a')}&f=${getOpt('f')}" style="width:${w}px;height:${hin.value}px"></iframe>`;
+    meter();
+  }
+  function meter(){
+    const m=$('#labMeter'),fixed=+hin.value;
+    if(!labNat){m.dataset.k='ok';m.textContent='Esperando a la pieza…';return}
+    if(fixed<labNat){m.dataset.k='cut';m.textContent=`Se corta: la pieza mide ${labNat} px y el web part solo ${fixed} px.`}
+    else if(fixed-labNat>80){m.dataset.k='extra';m.textContent=`Sobra espacio: la pieza mide ${labNat} px y el web part ${fixed} px (+${fixed-labNat}).`}
+    else{m.dataset.k='ok';m.textContent=`Bien: la pieza mide ${labNat} px y el web part ${fixed} px.`}
+  }
+  sel.onchange=()=>build(true);wsel.onchange=()=>build(true);
+  hin.oninput=()=>{const f=$('#labIf');if(f)f.style.height=hin.value+'px';meter()};
+  const cp=(t,b)=>{(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()});const o=b.textContent;b.textContent='Copiado';setTimeout(()=>b.textContent=o,1200)};
+  $('#labCopyUrl').onclick=e=>cp(url.textContent,e.target);
+  $('#labCopyIf').onclick=e=>cp(iframeCode(),e.target);
+  const log=[];
+  window.__labMsg=function(ev){
+    const f=$('#labIf');if(!f||ev.source!==f.contentWindow)return;const d=ev.data;if(!d||d.type!=='sp-sim-embed-height')return;
+    labNat=d.height;meter();log.unshift(`${new Date().toLocaleTimeString()}  ${d.piece}  height=${d.height}`);
+    $('#labLog').textContent=log.slice(0,12).join('\n');
+  };
+  build(true);
+}
+window.addEventListener('message',e=>{if(window.__labMsg&&$('#labLog'))window.__labMsg(e)});
+
+/* 11 · RECETA ----------------------------------------------------------
+   @personalizar: formato de receta. Ver docs/05-receta-y-ensamblaje.md */
+function wpJSON(w){
+  const c={};
+  if(w.type==='i'){Object.assign(c,{archivo:w.archivo,ancho_px:w.ancho_px,alt:w.alt,vinculo:w.vinculo||null})}
+  else if(w.type==='e'){Object.assign(c,{url_embed:`${embedBase()}?embed=${w.pieza}`,alto_px:EMBED_PIECES[w.pieza].h,gif_fallback:w.archivo_gif||null,poster:w.archivo,alt:w.alt})}
+  else if(w.type==='p'){Object.assign(c,{app:'(pegar el ID o enlace de la app)',lista:w.lista,alto_px:w.alto_px})}
+  else Object.assign(c,w.cfg||{});
+  return{webpart:w.webpart,ruta:w.ruta,tipo:WPT[w.type],nota:w.nota||undefined,config:c};
+}
+function recipeJSON(key){
+  const Pg=normalize(key);
+  return{pagina:Pg.slug,titulo:Pg.title,estado:'borrador (no publicar)',estilo:getOpt('s'),tipo_sitio:'Communication Site (full-width solo aquí; en Team Site todo va a 1 columna)',banner:'borrar (Delete web part); título solo en Page details',navegacion:'no editar sin orden explícita',
+    secciones:Pg.sections.map(s=>({layout:LJSON[s.layout],fondo:s.bg,columnas:s.cols.map(col=>col.map(wpJSON))}))};
+}
+function recipeMD(key){
+  const Pg=normalize(key);let o=`# Receta: ${Pg.title}\nBanner: bórralo («Delete web part»). Título de la página (Page details): "${Pg.title}".\n`;
+  Pg.sections.forEach((s,si)=>{
+    o+=`\n## Sección ${si+1} · ${LNAME[s.layout]} · Fondo: ${s.bg}\n`;
+    s.cols.forEach((col,ci)=>{
+      if(s.cols.length>1)o+=`### Columna ${ci+1}\n`;
+      col.forEach((w,wi)=>{
+        o+=`${wi+1}. **${w.webpart}** (${WPT[w.type]}) · ruta ${w.ruta}${w.nota?' · '+w.nota:''}\n`;
+        if(w.type==='i')o+=`   - Imagen: subir \`${w.archivo}\` (${w.ancho_px} px) · Alt: «${w.alt}»\n   - Vínculo: ${w.vinculo||'ninguno'}\n`;
+        if(w.type==='e')o+=`   - Embed: pegar \`${embedBase()}?embed=${w.pieza}\`\n   - Alto fijo: ${EMBED_PIECES[w.pieza].h[1204]} px (1204) · ${EMBED_PIECES[w.pieza].h[760]} px (760) · activar «ancho completo»\n   - Alt/descripción: «${w.alt}»\n`+(w.archivo_gif?`   - Alternativa sin Embed: subir \`${w.archivo_gif}\` en un web part Image (≤ 3 MB)\n`:'');
+        if(w.type==='p')o+=`   - Power Apps: pegar el ID de la app · alto ${w.alto_px} px · datos en la List «${w.lista}»\n`;
+        if(w.type==='n'&&w.cfg)o+=Object.entries(w.cfg).map(([k,v])=>`   - ${k}: ${v}\n`).join('');
+      });
+    });
+  });
+  return o;
+}
+function recipeManifest(key){
+  const Pg=normalize(key),out=[];
+  Pg.sections.forEach(s=>s.cols.forEach(col=>col.forEach(w=>{
+    if(w.type==='i')out.push({archivo:w.archivo,ruta:w.ruta,ancho_px:w.ancho_px,alt:w.alt,vinculo:w.vinculo||null});
+    if(w.type==='e'){out.push({archivo:w.archivo,ruta:w.ruta,ancho_px:2408,alt:w.alt,vinculo:null,nota:'póster / fallback estático del Embed'});if(w.archivo_gif)out.push({archivo:w.archivo_gif,ruta:w.ruta,ancho_px:1204,alt:w.alt,vinculo:null,gif:true})}
+  })));
+  return out;
+}
+let rcpKey='home',rcpTab='json';
+function renderRecipe(){
+  return `<h1 class="sr">Receta</h1><div class="t" style="margin:16px 0 18px"><h2>Receta de armado</h2><p>La misma página se vuelve instrucciones: qué web part, en qué sección, con qué archivo, alt y vínculo.</p></div>
+  <div class="rcp"><div class="flt"><label style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--mute)">Página <select id="rcpPage" style="background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px 10px">${Object.keys(PAGES).map(k=>`<option value="${k}">${PAGES[k].title}</option>`).join('')}</select></label>
+  <div class="rcp-tabs" role="tablist"><button class="fb" data-rt="json">pagina.json</button><button class="fb" data-rt="md">receta.md</button><button class="fb" data-rt="man">manifiesto.json</button></div>
+  <button class="btn" id="rcpCopy">Copiar</button><button class="btn" id="rcpDl">Descargar</button></div>
+  <pre class="code" id="rcpOut" tabindex="0" aria-label="Vista previa de la receta"></pre></div>`;
+}
+function bindRecipe(){
+  const sel=$('#rcpPage');sel.value=rcpKey;
+  function get(){
+    if(rcpTab==='json')return{t:JSON.stringify(recipeJSON(rcpKey),null,2),n:`${PAGES[rcpKey].slug}-pagina.json`,m:'application/json'};
+    if(rcpTab==='md')return{t:recipeMD(rcpKey),n:`${PAGES[rcpKey].slug}-receta.md`,m:'text/markdown'};
+    return{t:JSON.stringify({imagenes:recipeManifest(rcpKey)},null,2),n:`${PAGES[rcpKey].slug}-manifiesto.json`,m:'application/json'};
+  }
+  function paint(){$('#rcpOut').textContent=get().t;$$('[data-rt]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.rt===rcpTab)))}
+  sel.onchange=()=>{rcpKey=sel.value;paint()};
+  $$('[data-rt]').forEach(b=>b.onclick=()=>{rcpTab=b.dataset.rt;paint()});
+  $('#rcpCopy').onclick=e=>{const t=get().t;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{});e.target.textContent='Copiado';setTimeout(()=>e.target.textContent='Copiar',1200)};
+  $('#rcpDl').onclick=()=>{const g=get(),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([g.t],{type:g.m}));a.download=g.n;document.body.appendChild(a);a.click();a.remove()};
+  paint();
+}
+
+/* 12 · PIEZAS EMBEBIBLES (modo ?embed=<pieza>) ---------------------------
+   Cada pieza es una función mountXxx(root). Reglas: sin dependencias, usa now() para animar
+   (así la herramienta de GIF puede congelar el tiempo), responde por container query y avisa su
+   alto con postMessage. */
+function readTheme(){
+  const cs=getComputedStyle(document.documentElement),g=n=>cs.getPropertyValue(n).trim();
+  return{bg:g('--bg'),ink:g('--ink'),mute:g('--mute'),accent:g('--accent'),atx:g('--atx'),surf:g('--surf'),line:g('--line'),hl:[g('--hl-model'),g('--hl-scan'),g('--hl-form'),g('--hl-insight')]};
+}
+function rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16);return[n>>16&255,n>>8&255,n&255]}
+function rgba(h,a){const c=rgb(h);return`rgba(${c[0]},${c[1]},${c[2]},${a})`}
+const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+function reportHeight(piece,el){
+  let last=0;
+  const send=()=>{const h=Math.ceil(el.getBoundingClientRect().height);if(h&&h!==last){last=h;try{parent.postMessage({type:'sp-sim-embed-height',piece,height:h},'*')}catch(e){}}};
+  if(window.ResizeObserver)new ResizeObserver(send).observe(el);
+  [0,100,400,1000,2500].forEach(t=>setTimeout(send,t));
+  window.addEventListener('load',send);
+}
+function animateNum(el,to,ms){
+  const from=+el.dataset.v||0;el.dataset.v=to;
+  if(window.__simTime!=null||matchMedia('(prefers-reduced-motion:reduce)').matches){el.textContent=to.toLocaleString('es-MX');return}
+  const t0=performance.now();
+  (function s(t){const k=clamp((t-t0)/ms,0,1),e=1-Math.pow(1-k,3);el.textContent=Math.round(from+(to-from)*e).toLocaleString('es-MX');if(k<1)requestAnimationFrame(s)})(t0);
+}
+
+/* 12a · header animado --------------------------------------------------- */
+PIECE_MOUNT.header=function(root){
+  root.innerHTML=`<div class="hdr"><canvas aria-hidden="true"></canvas><div class="hdr-t"><p class="kick mono">Atlas Design Hub</p><h1>Diseño a la medida de cada proyecto.</h1><p class="sub">Herramientas, squads y casos del estudio en un solo lugar.</p><ul class="hdr-sq">${SQ.map(s=>`<li class="chip" style="--c:${s.c}">${s.n}</li>`).join('')}</ul></div></div>`;
+  const hd=$('.hdr',root),cv=$('canvas',hd),ctx=cv.getContext('2d');
+  let W=0,H=0,TH=readTheme(),vis=true;
+  const STEP=11,TAU=Math.PI*2,PER=12; /* PER = duración del bucle en s: todas las frecuencias son enteras, así el GIF cierra solo */
+  let textR=0;
+  function size(){const D=Math.min(window.devicePixelRatio||1,2);W=hd.clientWidth;H=hd.clientHeight;const hr=hd.getBoundingClientRect();textR=Math.max(...$$('.hdr-t h1,.hdr-t .sub,.hdr-sq',hd).map(e=>{const r=document.createRange();r.selectNodeContents(e);return r.getBoundingClientRect().right-hr.left}),0);cv.width=Math.round(W*D);cv.height=Math.round(H*D);ctx.setTransform(D,0,0,D,0,0)}
+  function field(u,v,t){
+    const ph=t/PER*TAU;let f=0;
+    for(let i=0;i<4;i++){const cx=.5+.34*Math.sin(ph*(1+i%2)+i*1.7),cy=.5+.3*Math.cos(ph*(1+(i+1)%2)+i*2.3),r=.2+.04*i,dx=(u-cx)*1.6,dy=v-cy;f+=Math.exp(-(dx*dx+dy*dy)/(2*r*r))}
+    const rib=.5+.5*Math.sin(7*(u*.8+v*.6)-ph*2);
+    return clamp(f*.7+rib*.35,0,1);
+  }
+  function frame(t){
+    ctx.fillStyle=TH.bg;ctx.fillRect(0,0,W,H);
+    const mb={x:W*.44,y:H*.08,w:W*.54,h:H*.84};
+    for(let y=STEP/2;y<H;y+=STEP)for(let x=STEP/2;x<W;x+=STEP){
+      const u=x/W,v=y/H,mask=smooth(textR+10,textR+150,x);if(mask<.02)continue;
+      const f=field(u,v,t),lu=(x-mb.x)/mb.w,lv=(y-mb.y)/mb.h;
+      const land=lu>=0&&lu<=1&&lv>=0&&lv<=1&&inLand(lu,lv);
+      const rr=STEP*.5*(.08+.82*f)*mask*(land?.92:.7);if(rr<.4)continue;
+      ctx.fillStyle=land?rgba(TH.atx,.22+.55*f):rgba(TH.ink,.08+.2*f);
+      ctx.beginPath();ctx.arc(x,y,rr,0,TAU);ctx.fill();
+    }
+    const pos=OFF.map(o=>[mb.x+o.x*mb.w,mb.y+o.y*mb.h]);
+    LINKS.forEach(([a,b],i)=>{
+      const A=pos[a],B=pos[b],col=TH.hl[i%4],mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2-Math.hypot(B[0]-A[0],B[1]-A[1])*.28;
+      ctx.strokeStyle=rgba(col,.4);ctx.lineWidth=1.1;ctx.setLineDash([3,5]);ctx.beginPath();ctx.moveTo(A[0],A[1]);ctx.quadraticCurveTo(mx,my,B[0],B[1]);ctx.stroke();ctx.setLineDash([]);
+      const p=((t/3)+i/LINKS.length)%1,q=1-p,px=q*q*A[0]+2*q*p*mx+p*p*B[0],py=q*q*A[1]+2*q*p*my+p*p*B[1];
+      const g=ctx.createRadialGradient(px,py,0,px,py,11);g.addColorStop(0,rgba(col,.9));g.addColorStop(1,rgba(col,0));
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,11,0,TAU);ctx.fill();
+      ctx.fillStyle=col;ctx.beginPath();ctx.arc(px,py,2.8,0,TAU);ctx.fill();
+      if(p>.88){const s=(p-.88)/.12;ctx.strokeStyle=rgba(col,1-s);ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(B[0],B[1],7+16*s,0,TAU);ctx.stroke()}
+    });
+    ctx.font='10px "JetBrains Mono",ui-monospace,monospace';
+    pos.forEach((p,i)=>{
+      ctx.fillStyle=TH.bg;ctx.beginPath();ctx.arc(p[0],p[1],6.5,0,TAU);ctx.fill();
+      ctx.strokeStyle=TH.accent;ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(p[0],p[1],6.5,0,TAU);ctx.stroke();
+      ctx.fillStyle=TH.accent;ctx.beginPath();ctx.arc(p[0],p[1],2.6,0,TAU);ctx.fill();
+      ctx.fillStyle=TH.mute;ctx.fillText(OFF[i].n.toUpperCase(),p[0]+11,p[1]+3.5);
+    });
+  }
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  size();frame(reduce?4:now()/1000);
+  if(window.ResizeObserver)new ResizeObserver(()=>{size();frame(reduce?4:now()/1000)}).observe(hd);
+  window.addEventListener('sim:theme',()=>{TH=readTheme();frame(reduce?4:now()/1000)});
+  if(window.IntersectionObserver)new IntersectionObserver(es=>{vis=es[0].isIntersecting}).observe(hd);
+  if(!reduce)(function tick(){if(vis&&!document.hidden)frame(now()/1000);raf(tick)})();
+};
+
+/* 12b · impacto por squad ------------------------------------------------ */
+PIECE_MOUNT.impact=function(root){
+  /* @personalizar: cifras ficticias [una lista por squad; cada métrica trae un valor por oficina (6)] */
+  const IMP={
+    all:[{l:'Proyectos apoyados',v:[22,31,18,14,26,9]},{l:'Horas devueltas al equipo',v:[310,420,260,180,350,120]},{l:'Herramientas en uso',v:[6,8,5,4,7,3]}],
+    model:[{l:'Modelos coordinados',v:[9,12,6,5,8,3]},{l:'Choques resueltos',v:[140,210,90,70,120,40]},{l:'Revisiones automáticas',v:[30,44,21,16,28,10]}],
+    scan:[{l:'Sitios capturados',v:[4,7,3,2,6,1]},{l:'Millones de puntos leídos',v:[18,36,12,9,30,4]},{l:'Mediciones validadas',v:[60,95,40,28,80,15]}],
+    form:[{l:'Opciones exploradas',v:[120,260,90,70,180,40]},{l:'Estudios de planta',v:[11,19,8,6,14,4]},{l:'Decisiones documentadas',v:[7,12,5,4,9,2]}],
+    insight:[{l:'Tableros publicados',v:[5,9,4,3,7,2]},{l:'Fuentes conectadas',v:[12,18,9,7,15,5]},{l:'Consultas por semana',v:[80,140,60,45,110,25]}]
+  };
+  const TABS=[{id:'all',n:'Todos',c:'var(--accent)'}].concat(SQ.map(s=>({id:s.id,n:s.n,c:s.c})));
+  let sq='all',mi=0;
+  root.innerHTML=`<div class="imp"><div class="imp-h"><h2>Impacto por squad.</h2><p>Elige un squad y una cifra. Las burbujas crecen con el área.</p></div><div class="imp-tabs" role="tablist" aria-label="Squad"></div><div class="imp-body"><div class="imp-stats" role="group" aria-label="Cifras"></div><figure class="imp-map"><svg viewBox="0 0 600 340" role="img"></svg><figcaption>Burbuja = valor por oficina (área proporcional).</figcaption></figure></div></div>`;
+  const imp=$('.imp',root),tabs=$('.imp-tabs',root),stats=$('.imp-stats',root),svg=$('svg',root);
+  let dots='';for(let y=14;y<340;y+=13)for(let x=14;x<600;x+=13){if(inLand(x/600,y/340))dots+=`<circle cx="${x}" cy="${y}" r="1.7"/>`}
+  const mp=o=>[o.x*600,o.y*340];
+  svg.innerHTML=`<g fill="var(--mute)" opacity=".38">${dots}</g>`+OFF.map((o,i)=>`<circle class="bub" data-i="${i}" cx="${mp(o)[0]}" cy="${mp(o)[1]}" fill="var(--c)" fill-opacity=".34" stroke="var(--c)" stroke-width="1.5"></circle>`).join('')+OFF.map((o,i)=>`<circle cx="${mp(o)[0]}" cy="${mp(o)[1]}" r="3" fill="var(--ink)"/><text class="ol" x="${mp(o)[0]+8}" y="${mp(o)[1]+20}">${o.n.toUpperCase()}</text><text class="ov" data-v="${i}" x="${mp(o)[0]}" y="${mp(o)[1]-4}" text-anchor="middle"></text>`).join('');
+  tabs.innerHTML=TABS.map(t=>`<button role="tab" data-t="${t.id}" style="--c:${t.c}">${t.n}</button>`).join('');
+  function paint(first){
+    const T=TABS.find(t=>t.id===sq),M=IMP[sq];
+    imp.style.setProperty('--c',T.c);
+    $$('button',tabs).forEach(b=>b.setAttribute('aria-selected',String(b.dataset.t===sq)));
+    if(first||!stats.children.length)stats.innerHTML=M.map((m,i)=>`<button class="stat" data-m="${i}"><b>0</b><span>${esc(m.l)}</span></button>`).join('');
+    else $$('.stat',stats).forEach((b,i)=>$('span',b).textContent=M[i].l);
+    $$('.stat',stats).forEach((b,i)=>{b.setAttribute('aria-pressed',String(i===mi));animateNum($('b',b),M[i].v.reduce((a,c)=>a+c,0),650)});
+    const v=M[mi].v,max=Math.max(...v);
+    $$('.bub',svg).forEach((c,i)=>c.style.setProperty('r',Math.max(5,46*Math.sqrt(v[i]/max)).toFixed(1)+'px'));
+    const top=v.map((x,i)=>[x,i]).sort((a,b)=>b[0]-a[0]).slice(0,2).map(a=>a[1]);
+    $$('[data-v]',svg).forEach(t=>{const i=+t.dataset.v;t.textContent=top.includes(i)?v[i].toLocaleString('es-MX'):''});
+    svg.setAttribute('aria-label',`Mapa de ${M[mi].l} de ${T.n}: `+OFF.map((o,i)=>`${o.n} ${v[i]}`).join(', '));
+  }
+  tabs.addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;sq=b.dataset.t;mi=0;paint(true)});
+  tabs.addEventListener('keydown',e=>{if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;const i=TABS.findIndex(t=>t.id===sq),n=(i+(e.key==='ArrowRight'?1:TABS.length-1))%TABS.length;sq=TABS[n].id;mi=0;paint(true);$('[data-t="'+sq+'"]',tabs).focus()});
+  stats.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(!b)return;mi=+b.dataset.m;paint(false)});
+  paint(true);
+};
+
+/* 12c · grafo de comunidades -------------------------------------------- */
+PIECE_MOUNT.graph=function(root){
+  /* @personalizar: personas ficticias [iniciales, squad, comunidades...] */
+  const COMM=[{id:'auto',n:'Automatización'},{id:'data',n:'Datos'},{id:'viz',n:'Visualización'},{id:'scan',n:'Escaneo'},{id:'edu',n:'Formación'}];
+  const PEOPLE=[['LM','model','auto','edu'],['TV','model','auto'],['NR','model','auto','viz'],['PA','model','data'],['SG','model','viz'],['JB','model','edu'],
+    ['CS','scan','scan'],['ML','scan','scan','data'],['FH','scan','scan'],['KL','scan','viz','scan'],['OM','scan','auto'],['QT','scan','edu'],
+    ['RP','form','viz','auto'],['DC','form','viz'],['UZ','form','auto'],['WY','form','edu','viz'],['XA','form','viz'],['YB','form','data'],
+    ['VT','insight','data','edu'],['IO','insight','data'],['ZC','insight','data','viz'],['BD','insight','data','auto'],['HE','insight','edu'],['GF','insight','data']];
+  const TAU2=Math.PI*2;
+  const hubs=COMM.map((c,i)=>{const a=(-90+72*i)*Math.PI/180;return{id:'h:'+c.id,k:c.id,n:c.n,x:500+255*Math.cos(a),y:285+170*Math.sin(a),hub:1,m:[]}});
+  const hubBy=Object.fromEntries(hubs.map(h=>[h.k,h]));
+  const people=PEOPLE.map(p=>({id:'p:'+p[0],i:p[0],sq:p[1],c:p.slice(2),hub:0}));
+  const byPrimary={};people.forEach(p=>{(byPrimary[p.c[0]]=byPrimary[p.c[0]]||[]).push(p)});
+  Object.entries(byPrimary).forEach(([k,list])=>list.forEach((p,j)=>{
+    const h=hubBy[k],a=TAU2*j/list.length+hubs.indexOf(h),r=62+(j%2)*34;
+    p.x=h.x+r*Math.cos(a);p.y=h.y+r*Math.sin(a)*.82;
+    if(p.c[1]){const h2=hubBy[p.c[1]];p.x+=(h2.x-p.x)*.2;p.y+=(h2.y-p.y)*.2}
+  }));
+  function relax(){const all=hubs.concat(people);for(let it=0;it<140;it++){for(let i=0;i<all.length;i++)for(let j=i+1;j<all.length;j++){const a=all[i],b=all[j];let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||.01;const m=(a.hub||b.hub)?52:40;if(d<m){const s=(m-d)/2/d;if(!a.hub){a.x-=dx*s;a.y-=dy*s}if(!b.hub){b.x+=dx*s;b.y+=dy*s}}}people.forEach(p=>{hubs.forEach(h=>{const dx=p.x-h.x,dy=p.y-(h.y+42),d=Math.hypot(dx,dy)||.01;if(d<58){p.x+=dx/d*(58-d);p.y+=dy/d*(58-d)}});p.x=clamp(p.x,26,974);p.y=clamp(p.y,26,534)})}}
+  relax();
+  people.forEach(p=>p.c.forEach(k=>hubBy[k].m.push(p)));
+  const adj={};hubs.concat(people).forEach(n=>adj[n.id]=new Set([n.id]));
+  people.forEach(p=>p.c.forEach(k=>{adj[p.id].add('h:'+k);adj['h:'+k].add(p.id)}));
+  const links=[];people.forEach(p=>p.c.forEach(k=>links.push([p,hubBy[k]])));
+  const sqName=id=>SQ_BY[id].n;
+  root.innerHTML=`<div class="gr"><h2>Comunidades, a la vista.</h2><p class="s">24 personas ficticias y 5 comunidades. Pasa el cursor, usa Tab o toca un nodo.</p>
+  <svg viewBox="0 0 1000 560" role="group" aria-label="Grafo de personas y comunidades">${links.map(([p,h])=>`<line class="lk" data-a="${p.id}" data-b="${h.id}" x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${h.x.toFixed(1)}" y2="${h.y.toFixed(1)}"/>`).join('')}
+  ${hubs.map(h=>`<g class="nd hub" data-id="${h.id}" tabindex="0" role="button" aria-pressed="false" aria-label="Comunidad ${h.n}"><circle class="hubc rg" cx="${h.x.toFixed(1)}" cy="${h.y.toFixed(1)}" r="26"/><text x="${h.x.toFixed(1)}" y="${(h.y+46).toFixed(1)}" text-anchor="middle">${h.n}</text><circle cx="${h.x.toFixed(1)}" cy="${h.y.toFixed(1)}" r="6" fill="var(--atx)"/></g>`).join('')}
+  ${people.map(p=>`<g class="nd" data-id="${p.id}" tabindex="0" role="button" aria-pressed="false" aria-label="Persona ${p.i}, ${sqName(p.sq)}, comunidades: ${p.c.map(k=>hubBy[k].n).join(', ')}"><circle class="rg" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="17" fill="${SQ_BY[p.sq].c}"/><text class="ini" x="${p.x.toFixed(1)}" y="${(p.y+4).toFixed(1)}" text-anchor="middle">${p.i}</text></g>`).join('')}</svg>
+  <div class="ro" aria-live="polite"></div><div class="lg">${SQ.map(s=>`<span class="chip" style="--c:${s.c}">${s.n}</span>`).join('')}</div></div>`;
+  const svg=$('svg',root),ro=$('.ro',root);let pin=null,hov=null;
+  const IDLE='Pasa el cursor o usa Tab sobre una persona o una comunidad. Enter fija la selección y Esc la suelta.';
+  const byId={};hubs.concat(people).forEach(n=>byId[n.id]=n);
+  function paint(){
+    const a=pin||hov;
+    $$('.nd',svg).forEach(g=>{const id=g.dataset.id;g.classList.toggle('dim',!!a&&!adj[a].has(id));g.classList.toggle('pin',id===pin);g.setAttribute('aria-pressed',String(id===pin))});
+    $$('.lk',svg).forEach(l=>{const on=a&&(l.dataset.a===a||l.dataset.b===a);l.classList.toggle('dim',!!a&&!on);l.classList.toggle('hot',!!on)});
+    if(!a){ro.innerHTML=IDLE;return}
+    const n=byId[a];
+    ro.innerHTML=n.hub?`<b>${n.n}</b> · ${n.m.length} personas: ${n.m.map(p=>p.i).join(', ')}.`:`<b>${n.i}</b> · ${sqName(n.sq)} · comunidades: ${n.c.map(k=>hubBy[k].n).join(', ')}.`;
+  }
+  svg.addEventListener('pointerover',e=>{const g=e.target.closest('.nd');hov=g?g.dataset.id:null;paint()});
+  svg.addEventListener('pointerleave',()=>{hov=null;paint()});
+  svg.addEventListener('focusin',e=>{const g=e.target.closest('.nd');if(g){hov=g.dataset.id;paint()}});
+  svg.addEventListener('focusout',()=>{hov=null;paint()});
+  svg.addEventListener('click',e=>{const g=e.target.closest('.nd');if(!g){pin=null}else pin=pin===g.dataset.id?null:g.dataset.id;paint()});
+  svg.addEventListener('keydown',e=>{const g=e.target.closest('.nd');if(e.key==='Escape'){pin=null;paint()}else if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();pin=pin===g.dataset.id?null:g.dataset.id;paint()}});
+  paint();
+};
+
+/* 12d · dónde entra cada squad ------------------------------------------ */
+PIECE_MOUNT.stages=function(root){
+  /* @personalizar: etapas y cobertura por squad (0 = no entra, 1 = apoya, 2 = lidera) */
+  const STAGES=['Brief','Sitio','Concepto','Opciones','Modelo','Documentos','Obra','Operación'];
+  const COV={model:[0,0,1,1,2,2,2,1],scan:[1,2,1,0,1,0,2,2],form:[1,1,2,2,1,0,0,0],insight:[0,1,1,2,2,1,1,2]};
+  root.innerHTML=`<div class="stg"><h2>Dónde entra cada squad.</h2><p class="s">Ocho etapas de un proyecto. Pasa el cursor sobre un squad o una etapa.</p>
+  <div class="stg-sc"><table class="sg"><thead><tr><th scope="col"><span class="sr">Squad</span></th>${STAGES.map((s,i)=>`<th scope="col" tabindex="0" data-c="${i}">${String(i+1).padStart(2,'0')}<br>${s}</th>`).join('')}</tr></thead>
+  <tbody>${SQ.map(s=>`<tr tabindex="0" data-r="${s.id}" style="--c:${s.c}"><th scope="row">${s.n}<small>${s.line}</small></th>${COV[s.id].map((c,i)=>`<td data-l="${c}" data-c="${i}"><i${c?' data-b':''}></i></td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  <div class="ro" aria-live="polite"></div>
+  <div class="lgd"><span><i style="opacity:.95"></i>Lidera</span><span><i style="opacity:.35"></i>Apoya</span><span><i style="opacity:.07"></i>No entra</span></div></div>`;
+  const tb=$('table',root),ro=$('.ro',root);
+  const IDLE='Cada barra muestra en qué etapas lidera o apoya un squad.';
+  const list=a=>a.length?a.join(', '):'ninguna';
+  function clear(){tb.classList.remove('hov');$$('td.on',tb).forEach(c=>c.classList.remove('on'));ro.textContent=IDLE}
+  function row(id){
+    clear();tb.classList.add('hov');const r=$('tr[data-r="'+id+'"]',tb);$$('td',r).forEach(c=>{if(+c.dataset.l)c.classList.add('on')});
+    const cv=COV[id];ro.innerHTML=`<b>${SQ_BY[id].n}</b> lidera en ${list(STAGES.filter((s,i)=>cv[i]===2))} y apoya en ${list(STAGES.filter((s,i)=>cv[i]===1))}.`;
+  }
+  function col(i){
+    clear();tb.classList.add('hov');$$('td[data-c="'+i+'"]',tb).forEach(c=>{if(+c.dataset.l)c.classList.add('on')});
+    const L=SQ.filter(s=>COV[s.id][i]===2).map(s=>s.n),A=SQ.filter(s=>COV[s.id][i]===1).map(s=>s.n);
+    ro.innerHTML=`<b>${String(i+1).padStart(2,'0')} ${STAGES[i]}</b>: lideran ${list(L)}; apoyan ${list(A)}.`;
+  }
+  $$('tbody tr',tb).forEach(r=>{r.addEventListener('mouseenter',()=>row(r.dataset.r));r.addEventListener('focus',()=>row(r.dataset.r));r.addEventListener('mouseleave',clear);r.addEventListener('blur',clear)});
+  $$('thead th[data-c]',tb).forEach(h=>{h.addEventListener('mouseenter',()=>col(+h.dataset.c));h.addEventListener('focus',()=>col(+h.dataset.c));h.addEventListener('mouseleave',clear);h.addEventListener('blur',clear)});
+  clear();
+};
+
+/* 13 · ARRANQUE ---------------------------------------------------------- */
+function refreshEmbeds(){
+  $$('iframe.emb,#labIf').forEach(f=>{try{const u=new URL(f.src);u.searchParams.set('s',getOpt('s'));u.searchParams.set('a',getOpt('a'));u.searchParams.set('f',getOpt('f'));if(f.src!==u.href)f.src=u.href}catch(e){}});
+  const lu=$('#labUrl');if(lu)lu.textContent=lu.textContent.replace(/s=\w+&a=\w+/,`s=${getOpt('s')}&a=${getOpt('a')}`);
+}
+window.addEventListener('sim:theme',()=>{if(window.__booted)refreshEmbeds()});
+
+function bootEmbed(piece){
+  const H=document.documentElement;H.dataset.embed=piece;
+  ['s','a','f'].forEach(k=>H.dataset[k]=getOpt(k));
+  if(P('bg')==='transparent')H.dataset.bgx='transparent';
+  FFS=+P('ff')||0;
+  $('#app').remove();$('#ctl').remove();
+  const m=document.createElement('main');m.id='emb';m.dataset.piece=piece;document.body.appendChild(m);
+  if(!PIECE_MOUNT[piece]){m.innerHTML=`<div class="emb-err"><h1>Pieza no encontrada</h1><p>Usa <code>?embed=</code> con una de: ${Object.keys(PIECE_MOUNT).map(k=>`<code>${k}</code>`).join(', ')}.</p></div>`;return}
+  document.title=EMBED_PIECES[piece].title+' · pieza embebible';
+  PIECE_MOUNT[piece](m);reportHeight(piece,m);
+}
+
+(function boot(){
+  window.SPSIM={pieces:EMBED_PIECES,pages:Object.keys(PAGES)}; /* para las herramientas de tools/ */
+  const piece=P('embed');
+  if(piece!=null){bootEmbed(piece);return}
+  if(P('ctl')==='0')$('#ctl').hidden=true;
+  if(P('ctl')==='min'||lsGet('min')==='1')setMin(true);
+  window.addEventListener('hashchange',route);
+  route();
+  window.__booted=true;
+})();
+})();
+</script>
+</body>
+</html>

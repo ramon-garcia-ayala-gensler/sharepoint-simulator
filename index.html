@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es" data-s="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SharePoint Simulator · guía y demo</title>
+<meta name="description" content="Metodología para diseñar un sitio de SharePoint en una maqueta HTML y llevarlo al sitio real: web parts, piezas Embed, GIFs y recetas. Con simulador funcional.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--f:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;--m:"JetBrains Mono",ui-monospace,Consolas,monospace;--accent:#B7E34A;--on:#0B0C0D;--cn:#2FBF71;--ci:#3B82F6;--cp:#F59E0B;--ce:#A855F7}
+html[data-s="dark"]{--bg:#0B0C0D;--surf:#14161A;--surf2:#1B1E23;--line:#2A2E35;--ink:#E9EAEC;--mute:#A0A5AD;--atx:#B7E34A;color-scheme:dark}
+html[data-s="light"]{--bg:#F4F3EF;--surf:#fff;--surf2:#ECEAE4;--line:#D9D6CD;--ink:#1B1C1E;--mute:#5A5E64;--atx:#46620B;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--f);-webkit-font-smoothing:antialiased}
+a{color:var(--atx)}
+:focus-visible{outline:2px solid var(--atx);outline-offset:2px;border-radius:3px}
+.w{max-width:1100px;margin:0 auto;padding:0 20px}
+.mono{font-family:var(--m);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase}
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .w{display:flex;align-items:center;gap:20px;height:56px}
+.top b{font-weight:500}
+.top nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.top nav a{color:var(--mute);text-decoration:none;font-size:14px;padding:6px 10px;border-radius:4px}
+.top nav a:hover{color:var(--ink);background:var(--surf2)}
+.tg{background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:4px 10px;cursor:pointer;font:inherit;font-size:13px}
+.hero{padding:72px 0 40px;display:grid;gap:40px;grid-template-columns:1fr}
+@media(min-width:900px){.hero{grid-template-columns:1.05fr 1fr;align-items:center}}
+.hero h1{font-weight:300;font-size:clamp(34px,5.4vw,60px);line-height:1.04;letter-spacing:-.035em;margin:12px 0 16px}
+.hero p.l{color:var(--mute);font-size:19px;max-width:46ch;margin:0 0 24px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.b{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:6px;text-decoration:none;font-weight:500;border:1px solid var(--line);color:var(--ink);background:var(--surf)}
+.b.p{background:var(--accent);color:var(--on);border-color:transparent}
+.b:hover{border-color:var(--atx)}
+.gif{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surf)}
+.gif img{display:block;width:100%;height:auto}
+.gif figcaption{padding:8px 12px;font-size:13px;color:var(--mute)}
+section{padding:56px 0;border-top:1px solid var(--line)}
+section h2{font-weight:300;font-size:clamp(26px,3.6vw,38px);letter-spacing:-.025em;line-height:1.1;margin:0 0 8px}
+section>.w>p.s{color:var(--mute);max-width:64ch;margin:0 0 28px}
+.grid{display:grid;gap:16px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:18px;border-top:3px solid var(--c,var(--accent))}
+.card h3{margin:6px 0 6px;font-size:18px;font-weight:500}
+.card p{margin:0;color:var(--mute);font-size:15px}
+.step{font-family:var(--m);font-size:12px;color:var(--atx);letter-spacing:.1em}
+table{width:100%;border-collapse:collapse;font-size:14.5px;background:var(--surf);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--m);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:400;background:var(--surf2)}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-block;font-family:var(--m);font-size:10.5px;letter-spacing:.06em;padding:2px 8px;border-radius:3px;color:#0B0C0D;font-weight:500;background:var(--c)}
+pre{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow:auto;font:12.5px/1.55 var(--m);margin:0;color:var(--ink)}
+code{font-family:var(--m);font-size:.9em}
+p code,li code,td code{background:var(--surf2);padding:1px 6px;border-radius:3px}
+.flow{display:grid;gap:12px;counter-reset:s}
+.flow li{list-style:none;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.flow li::before{counter-increment:s;content:counter(s);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--on);font-weight:600}
+.flow{padding:0;margin:0}
+.demo{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg)}
+.demo iframe{display:block;width:100%;border:0;background:var(--bg)}
+.demo .cap{padding:8px 12px;font-size:13px;color:var(--mute);border-top:1px solid var(--line);background:var(--surf)}
+.warn{border-left:3px solid var(--cp);background:color-mix(in srgb,var(--cp) 10%,transparent);padding:10px 14px;border-radius:0 6px 6px 0;font-size:15px}
+.docs a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surf);text-decoration:none;color:var(--ink)}
+.docs a:hover{border-color:var(--atx)}
+.docs a span{display:block;color:var(--mute);font-size:14px}
+footer{padding:36px 0 60px;border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+  <b>SharePoint Simulator</b>
+  <nav aria-label="Secciones">
+    <a href="#idea">La idea</a><a href="#rutas">Rutas</a><a href="#embed">Embed</a><a href="#gif">GIFs</a><a href="#receta">Receta</a><a href="#docs">Docs</a>
+    <button class="tg" id="tg" aria-label="Cambiar entre estilo oscuro y claro">Claro / Oscuro</button>
+  </nav>
+</div></header>
+
+<main>
+<div class="w hero">
+  <div>
+    <span class="mono" style="color:var(--atx)">Metodología + simulador</span>
+    <h1>Diseña en HTML. Arma en SharePoint.</h1>
+    <p class="l">Una maqueta que respeta lo que SharePoint sí permite, recetas para armarla y piezas interactivas que entran con el web part Embed.</p>
+    <div class="btns">
+      <a class="b p" href="simulator/">Abrir el simulador</a>
+      <a class="b" href="simulator/#/embed-lab">Probar el Embed lab</a>
+      <a class="b" href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator">Ver el repo</a>
+    </div>
+  </div>
+  <figure class="gif" style="margin:0"><img src="assets/header-loop.gif" width="1204" height="377" alt="Animación de la pieza header: puntos tipo halftone que respiran sobre una silueta abstracta, seis oficinas ficticias y paquetes de datos que viajan entre ellas.">
+    <figcaption>La pieza <code>header</code> exportada como GIF (12 s en bucle, 2.8 MB). Es la alternativa cuando no puedes usar Embed.</figcaption></figure>
+</div>
+
+<section id="idea"><div class="w">
+  <h2>La idea en 30 segundos</h2>
+  <p class="s">SharePoint fija letra, botones y colores, y no corre CSS ni JS propios en páginas modernas. Tu diseño vive en una maqueta y de ella salen las instrucciones para armar el sitio real.</p>
+  <div class="grid g4">
+    <div class="card"><span class="step">01 · DISEÑAS</span><h3>Tokens y estilos</h3><p>Colores, tipografía y 1 o 2 direcciones de estilo, con contraste AA.</p></div>
+    <div class="card" style="--c:var(--ci)"><span class="step">02 · MAQUETAS</span><h3>Un solo HTML fiel</h3><p>Lienzo de 1204 px, layouts reales y un overlay que etiqueta cada bloque.</p></div>
+    <div class="card" style="--c:var(--cp)"><span class="step">03 · RECETA</span><h3>JSON + Markdown</h3><p>Qué web part, qué archivo, qué alt y qué vínculo, página por página.</p></div>
+    <div class="card" style="--c:var(--ce)"><span class="step">04 · ARMAS</span><h3>Borrador en SharePoint</h3><p>A mano, con una IA en el navegador o por REST. Nunca publicas sin pedirlo.</p></div>
+  </div>
+</div></section>
+
+<section id="rutas"><div class="w">
+  <h2>Elige la ruta de cada bloque</h2>
+  <p class="s">Prefiere siempre lo más simple: nativo, luego imagen, luego Embed o Power Apps. Cada salto agrega mantenimiento. Prueba el overlay con <a href="simulator/#/home?wp=1">#/home?wp=1</a>.</p>
+  <table>
+    <thead><tr><th>Ruta</th><th>Úsala para</th><th>Costo</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag" style="--c:var(--cn)">Nativo</span></td><td>Texto, listas, noticias, personas, eventos, enlaces, carruseles de páginas</td><td>Lo mantiene cualquier editor</td></tr>
+      <tr><td><span class="tag" style="--c:var(--ci)">Imagen / GIF</span></td><td>Titulares de marca, diagramas, KPIs estáticos, animaciones sin permisos (GIF ≤ 3 MB)</td><td>Hay que re-exportar si cambia; alt completo obligatorio</td></tr>
+      <tr><td><span class="tag" style="--c:var(--ce)">Embed</span></td><td>Piezas con estado: pestañas, mapas que reaccionan, grafos</td><td>Un admin debe permitir el dominio</td></tr>
+      <tr><td><span class="tag" style="--c:var(--cp)">Power Apps</span></td><td>Formularios, filtros sobre datos, solicitudes (sobre Microsoft Lists)</td><td>Licencias, DLP, no hereda el tema</td></tr>
+    </tbody>
+  </table>
+</div></section>
+
+<section id="embed"><div class="w">
+  <h2>Cómo traer HTML a SharePoint</h2>
+  <p class="s">SharePoint no muestra un <code>.html</code> subido (lo descarga). La salida: hospedar la pieza en GitHub Pages y mostrarla con el web part <b>Embed</b>, que es un iframe.</p>
+  <div class="grid g2" style="align-items:start">
+    <ol class="flow">
+      <li><div><b>Hospeda</b><br><span style="color:var(--mute)">Un repo con GitHub Pages. La pieza usa rutas relativas, así que se sirve desde su carpeta.</span></div></li>
+      <li><div><b>Pide una pieza con <code>?embed=</code></b><br><span style="color:var(--mute)">Quita el chrome y renderiza solo la pieza, interactiva y animada.</span></div></li>
+      <li><div><b>Permite el dominio</b><br><span style="color:var(--mute)">Un admin lo agrega en <i>HTML Field Security</i>. Sin esto, el Embed sale vacío.</span></div></li>
+      <li><div><b>Pega la URL en un web part Embed</b><br><span style="color:var(--mute)">Y fija el alto en píxeles: SharePoint no escucha el <code>postMessage</code> de alto de la pieza.</span></div></li>
+    </ol>
+    <pre>&lt;!-- lo que pegas en el web part Embed --&gt;
+&lt;iframe
+  src="https://USUARIO.github.io/REPO/simulator/
+       index.html?embed=impact&amp;s=dark&amp;a=lime"
+  width="100%" height="700" frameborder="0"
+  style="border:0;background:#0B0C0D"&gt;&lt;/iframe&gt;
+
+// lo que la pieza avisa (SharePoint lo ignora):
+parent.postMessage({
+  type: 'sp-sim-embed-height',
+  piece: 'impact', height: 694 }, '*');</pre>
+  </div>
+  <div class="warn" style="margin:22px 0"><b>El alto se fija a mano</b>, con el máximo de todos los estados de la pieza. Si es menor, se corta; si es mayor, queda una franja. El <a href="simulator/#/embed-lab">Embed lab</a> te lo mide.</div>
+  <div class="grid g2">
+    <div class="demo"><iframe title="Pieza impact embebida" src="simulator/index.html?embed=impact&amp;s=dark&amp;a=lime" height="720" loading="lazy"></iframe><div class="cap">Demo viva: <code>?embed=impact</code>. Cambia de squad y de cifra.</div></div>
+    <div class="demo"><iframe title="Pieza stages embebida" src="simulator/index.html?embed=stages&amp;s=dark&amp;a=lime" height="520" loading="lazy"></iframe><div class="cap">Demo viva: <code>?embed=stages</code>. Pasa el cursor por un squad o una etapa.</div></div>
+  </div>
+  <p style="margin-top:20px">Detalle completo, problemas frecuentes y checklist de piezas: <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator/blob/main/docs/03-embed-paso-a-paso.md">docs/03 · Embed paso a paso</a>.</p>
+</div></section>
+
+<section id="gif"><div class="w">
+  <h2>Sin permisos: imágenes y GIFs</h2>
+  <p class="s">Si no hay admin, la misma pieza se exporta como PNG o GIF y se sube a un web part Image (un solo vínculo, alt completo). El GIF debe pesar ≤ 3 MB.</p>
+  <div class="grid g2" style="align-items:start">
+    <pre>cd tools &amp;&amp; npm install
+
+# PNG a doble resolución (columna de 1204 → 2408 px)
+node export-embed.mjs png header 2408
+
+# GIF: pieza, ancho, segundos, fps
+node export-embed.mjs gif header 1204 12 12
+#  intento fps=12 colores=128: 4.84 MB
+#  intento fps=10 colores=96 : 3.78 MB
+#  intento fps=8  colores=64 : 2.77 MB  ✓</pre>
+    <div>
+      <table>
+        <thead><tr><th>Columna</th><th>Exporta a</th></tr></thead>
+        <tbody><tr><td>1 columna</td><td>2408 px</td></tr><tr><td>2 columnas</td><td>1172 px</td></tr><tr><td>3 columnas / 1/3</td><td>760 px</td></tr><tr><td>2/3</td><td>1584 px</td></tr><tr><td>Ancho completo</td><td>2560 px</td></tr></tbody>
+      </table>
+      <p style="color:var(--mute);font-size:14.5px;margin:12px 0 0">El reloj de la pieza se congela (<code>window.__simTime</code>) y se avanza cuadro por cuadro. El bucle dura 12 s con frecuencias enteras, así que cierra sin salto.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="receta"><div class="w">
+  <h2>La receta: la maqueta que se vuelve instrucciones</h2>
+  <p class="s">Cada página es un modelo <code>página → secciones → columnas → web parts</code>. De ese modelo salen el DOM de la maqueta y los archivos de la receta. Míralo en vivo en <a href="simulator/#/recipe">#/recipe</a>.</p>
+  <div class="grid g2" style="align-items:start">
+    <pre>sec('31', 'none', [               // 2/3 + 1/3
+  [ wp('n', 'Highlighted content',
+        hcHTML, {motivo:'proyectos'}) ],
+  [ wp('n', 'Events',
+        eventsHTML, {motivo:'eventos'}) ]
+]),
+sec('1', 'neutral',
+  [[ embedWp('stages') ]])        // pieza Embed</pre>
+    <pre># Receta: Inicio
+## Sección 3 · 1 columna · Fondo: neutral
+1. **Embed** (Embed) · ruta s2.c0.w0
+   - Embed: pegar `…?embed=stages`
+   - Alto fijo: 490 px (1204) · 480 px (760)
+   - Alternativa: subir `…-stages.gif` (≤ 3 MB)</pre>
+  </div>
+  <p style="margin-top:18px">Ejemplos completos en <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator/tree/main/examples">examples/</a>: <code>pagina.json</code>, <code>receta.md</code> y <code>manifiesto.json</code> de cada página, más <code>embeds.json</code>.</p>
+</div></section>
+
+<section id="docs"><div class="w">
+  <h2>Documentación</h2>
+  <p class="s">Todo el método, de la fase 0 a la QA, con lo que sí se probó y lo que hay que verificar en tu tenant.</p>
+  <div class="grid g2 docs">
+    <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator/blob/main/docs/01-metodologia.md"><b>01 · Metodología</b><span>Fases, ritmo, cómo elegir la ruta de cada bloque.</span></a>
+    <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator/blob/main/docs/02-capacidades-y-limites.md"><b>02 · Capacidades y límites</b><span>Lienzo, layouts, fondos, web parts y lecciones.</span></a>
+    <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator/blob/main/docs/03-embed-paso-a-paso.md"><b>03 · Embed paso a paso</b><span>Hospedaje, <code>?embed=</code>, alto y permiso de dominio.</span></a>
+    <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator/blob/main/docs/04-gifs-e-imagenes.md"><b>04 · Imágenes y GIFs</b><span>Tamaños, nombres y el pipeline de GIF ≤ 3 MB.</span></a>
+    <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator/blob/main/docs/05-receta-y-ensamblaje.md"><b>05 · Receta y ensamblaje</b><span>A mano, con IA o por REST. Power Apps.</span></a>
+    <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator/blob/main/docs/06-personalizar-y-extender.md"><b>06 · Personalizar y extender</b><span>Cambiar estilo, agregar páginas, web parts y piezas.</span></a>
+    <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator/blob/main/docs/07-publicar-y-privacidad.md"><b>07 · Publicar y privacidad</b><span>GitHub Pages y qué no debe ser público.</span></a>
+  </div>
+  <div class="warn" style="margin-top:24px"><b>Honestidad:</b> el simulador, el modo <code>?embed=</code> y los exportadores están probados. Las opciones exactas del web part Embed y la inserción final dentro de SharePoint dependen de tu tenant: pruébalas en una página de borrador antes de diseñar sobre ellas.</div>
+</div></section>
+</main>
+
+<footer><div class="w">SharePoint Simulator · contenido de ejemplo 100 % ficticio · licencia MIT · <a href="https://github.com/ramon-garcia-ayala-gensler/sharepoint-simulator">repositorio</a></div></footer>
+<script>
+(function(){var H=document.documentElement,k='spsim.guide.s';
+ try{var v=localStorage.getItem(k);if(v)H.dataset.s=v;else if(matchMedia('(prefers-color-scheme: light)').matches)H.dataset.s='light'}catch(e){}
+ document.getElementById('tg').addEventListener('click',function(){var n=H.dataset.s==='dark'?'light':'dark';H.dataset.s=n;try{localStorage.setItem(k,n)}catch(e){}});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "sharepoint-simulator-tools",
+  "private": true,
+  "type": "module",
+  "description": "Herramientas de exportación (PNG y GIF) para las piezas del simulador.",
+  "scripts": {
+    "gif": "node export-embed.mjs gif header",
+    "png": "node export-embed.mjs png header"
+  },
+  "dependencies": { "puppeteer-core": "^24.0.0" }
+}

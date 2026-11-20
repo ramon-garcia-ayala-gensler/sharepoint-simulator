@@ -1,0 +1,55 @@
+{
+  "descripcion": "Piezas interactivas o animadas del simulador que se incrustan en SharePoint con el web part Embed (iframe). El alto se fija a mano en el web part: SharePoint no escucha el postMessage de la pieza.",
+  "base_url": "https://ramon-garcia-ayala-gensler.github.io/sharepoint-simulator/simulator/index.html",
+  "requisitos": [
+    "Un administrador permite el dominio en «HTML Field Security» (Site settings > HTML Field Security).",
+    "Web part Embed: pegar url_embed, fijar el alto en píxeles y activar «ancho completo» si la sección es de 1 columna.",
+    "Si no se puede embeber, usar el GIF o el PNG de la pieza en un web part Image (GIF ≤ 3 MB)."
+  ],
+  "piezas": [
+    {
+      "pieza": "header",
+      "titulo": "Header animado",
+      "descripcion": "Campo halftone que respira, 6 oficinas y paquetes de datos. Bucle de 12 s.",
+      "url_embed": "https://ramon-garcia-ayala-gensler.github.io/sharepoint-simulator/simulator/index.html?embed=header",
+      "alto_sugerido_px": {
+        "760": 300,
+        "1204": 380
+      },
+      "gif_fallback": "header.gif"
+    },
+    {
+      "pieza": "stages",
+      "titulo": "Dónde entra cada squad",
+      "descripcion": "Matriz de 4 squads por 8 etapas del proyecto, con resaltado al pasar.",
+      "url_embed": "https://ramon-garcia-ayala-gensler.github.io/sharepoint-simulator/simulator/index.html?embed=stages",
+      "alto_sugerido_px": {
+        "760": 480,
+        "1204": 490
+      },
+      "gif_fallback": null
+    },
+    {
+      "pieza": "impact",
+      "titulo": "Impacto por squad",
+      "descripcion": "Pestañas por squad, cifras clicables y burbujas proporcionales al área.",
+      "url_embed": "https://ramon-garcia-ayala-gensler.github.io/sharepoint-simulator/simulator/index.html?embed=impact",
+      "alto_sugerido_px": {
+        "760": 910,
+        "1204": 700
+      },
+      "gif_fallback": null
+    },
+    {
+      "pieza": "graph",
+      "titulo": "Grafo de comunidades",
+      "descripcion": "24 personas ficticias y 5 comunidades; resalta vecinos y se navega con teclado.",
+      "url_embed": "https://ramon-garcia-ayala-gensler.github.io/sharepoint-simulator/simulator/index.html?embed=graph",
+      "alto_sugerido_px": {
+        "760": 585,
+        "1204": 845
+      },
+      "gif_fallback": null
+    }
+  ]
+}

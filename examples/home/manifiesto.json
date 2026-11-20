@@ -1,0 +1,36 @@
+{
+  "imagenes": [
+    {
+      "archivo": "atlas-inicio-s0-c0-w0-header.png",
+      "ruta": "s0.c0.w0",
+      "ancho_px": 2408,
+      "alt": "Header animado. Campo halftone que respira, 6 oficinas y paquetes de datos. Bucle de 12 s.",
+      "vinculo": null,
+      "nota": "póster / fallback estático del Embed"
+    },
+    {
+      "archivo": "atlas-inicio-s0-c0-w0-header.gif",
+      "ruta": "s0.c0.w0",
+      "ancho_px": 1204,
+      "alt": "Header animado. Campo halftone que respira, 6 oficinas y paquetes de datos. Bucle de 12 s.",
+      "vinculo": null,
+      "gif": true
+    },
+    {
+      "archivo": "atlas-inicio-s2-c0-w0-stages.png",
+      "ruta": "s2.c0.w0",
+      "ancho_px": 2408,
+      "alt": "Dónde entra cada squad. Matriz de 4 squads por 8 etapas del proyecto, con resaltado al pasar.",
+      "vinculo": null,
+      "nota": "póster / fallback estático del Embed"
+    },
+    {
+      "archivo": "atlas-inicio-s4-c0-w0-impact.png",
+      "ruta": "s4.c0.w0",
+      "ancho_px": 2408,
+      "alt": "Impacto por squad. Pestañas por squad, cifras clicables y burbujas proporcionales al área.",
+      "vinculo": null,
+      "nota": "póster / fallback estático del Embed"
+    }
+  ]
+}
